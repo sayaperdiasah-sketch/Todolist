@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard — Jejak Menuju Target</title>
 
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -12,24 +17,71 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
                         brand: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9',
-                            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e',
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
                         },
                         good: '#22c55e',
                         bad: '#ef4444',
-                        neutral: '#f59e0b',
+                        warning: '#f59e0b',
                     }
                 }
             }
         }
     </script>
+
+    <style>
+        /* Custom style untuk slider */
+        input[type="range"] {
+            accent-color: #2563eb;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 999px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status-btn.active-done {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+        .status-btn.active-partial {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+        .status-btn.active-skipped {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+        /* Animasi card */
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans antialiased">
+<body class="bg-gray-50 min-h-screen font-sans antialiased">
 
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
         <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <div class="bg-brand-600 text-white p-2 rounded-lg">
@@ -37,15 +89,15 @@
                 </div>
                 <div>
                     <h1 class="text-lg font-bold text-gray-800">Jejak Menuju Target</h1>
-                    <p class="text-xs text-gray-400" id="namaUser">User</p>
+                    <p class="text-xs text-gray-400" id="namaUser">Personal Coach</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="window.location.href='history.html'" class="text-gray-400 hover:text-brand-600 p-2">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
+                <button onclick="resetData()" class="text-gray-400 hover:text-brand-600 p-2" title="Reset semua data">
+                    <i class="fa-solid fa-rotate-right"></i>
                 </button>
-                <button onclick="window.location.href='habits.html'" class="text-gray-400 hover:text-brand-600 p-2">
-                    <i class="fa-solid fa-gear"></i>
+                <button onclick="window.location.href='#history'" class="text-gray-400 hover:text-brand-600 p-2">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
                 </button>
             </div>
         </div>
@@ -53,8 +105,32 @@
 
     <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
 
+        <!-- ============ KARTU METRIK RINGKASAN ============ -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-white rounded-2xl shadow-sm p-4 card-hover border-l-4 border-brand-500">
+                <p class="text-xs text-gray-400 uppercase">Stress</p>
+                <p class="text-2xl font-bold text-gray-800" id="avgStress">-</p>
+                <span class="text-xs text-gray-400">hari ini</span>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm p-4 card-hover border-l-4 border-green-500">
+                <p class="text-xs text-gray-400 uppercase">Mood</p>
+                <p class="text-2xl font-bold text-gray-800" id="avgMood">-</p>
+                <span class="text-xs text-gray-400">hari ini</span>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm p-4 card-hover border-l-4 border-yellow-500">
+                <p class="text-xs text-gray-400 uppercase">Energi</p>
+                <p class="text-2xl font-bold text-gray-800" id="avgEnergi">-</p>
+                <span class="text-xs text-gray-400">hari ini</span>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm p-4 card-hover border-l-4 border-blue-500">
+                <p class="text-xs text-gray-400 uppercase">Fokus</p>
+                <p class="text-2xl font-bold text-gray-800" id="avgFokus">-</p>
+                <span class="text-xs text-gray-400">hari ini</span>
+            </div>
+        </section>
+
         <!-- ============ KARTU TARGET & POIN ============ -->
-        <section class="bg-white rounded-2xl shadow p-6">
+        <section class="bg-white rounded-2xl shadow-sm p-6 card-hover">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                     <p class="text-sm text-gray-400 uppercase tracking-wide">🎯 Target Utama</p>
@@ -79,31 +155,31 @@
         </section>
 
         <!-- ============ STATUS PSIKIS HARI INI ============ -->
-        <section class="bg-white rounded-2xl shadow p-6">
+        <section class="bg-white rounded-2xl shadow-sm p-6 card-hover">
             <h3 class="font-semibold text-gray-800 mb-4">🧠 Kondisi Psikis Hari Ini</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="text-center p-3 bg-gray-50 rounded-xl">
                     <p class="text-2xl" id="emojiStres">😌</p>
-                    <p class="text-sm font-semibold text-gray-700" id="labelStres">Stres</p>
-                    <input type="range" id="inputStres" min="1" max="10" value="3" class="w-full mt-2 accent-red-500" oninput="updatePsikis()" />
+                    <p class="text-sm font-semibold text-gray-700">Stres</p>
+                    <input type="range" id="inputStres" min="1" max="10" value="3" class="w-full mt-2" oninput="updatePsikis()" />
                     <p class="text-xs text-gray-400" id="valueStres">3/10</p>
                 </div>
                 <div class="text-center p-3 bg-gray-50 rounded-xl">
                     <p class="text-2xl" id="emojiMood">😄</p>
-                    <p class="text-sm font-semibold text-gray-700" id="labelMood">Mood</p>
-                    <input type="range" id="inputMood" min="1" max="10" value="7" class="w-full mt-2 accent-yellow-500" oninput="updatePsikis()" />
+                    <p class="text-sm font-semibold text-gray-700">Mood</p>
+                    <input type="range" id="inputMood" min="1" max="10" value="7" class="w-full mt-2" oninput="updatePsikis()" />
                     <p class="text-xs text-gray-400" id="valueMood">7/10</p>
                 </div>
                 <div class="text-center p-3 bg-gray-50 rounded-xl">
                     <p class="text-2xl" id="emojiEnergi">🔋</p>
-                    <p class="text-sm font-semibold text-gray-700" id="labelEnergi">Energi</p>
-                    <input type="range" id="inputEnergi" min="1" max="10" value="6" class="w-full mt-2 accent-green-500" oninput="updatePsikis()" />
+                    <p class="text-sm font-semibold text-gray-700">Energi</p>
+                    <input type="range" id="inputEnergi" min="1" max="10" value="6" class="w-full mt-2" oninput="updatePsikis()" />
                     <p class="text-xs text-gray-400" id="valueEnergi">6/10</p>
                 </div>
                 <div class="text-center p-3 bg-gray-50 rounded-xl">
                     <p class="text-2xl" id="emojiFokus">🎯</p>
-                    <p class="text-sm font-semibold text-gray-700" id="labelFokus">Fokus</p>
-                    <input type="range" id="inputFokus" min="1" max="10" value="5" class="w-full mt-2 accent-blue-500" oninput="updatePsikis()" />
+                    <p class="text-sm font-semibold text-gray-700">Fokus</p>
+                    <input type="range" id="inputFokus" min="1" max="10" value="5" class="w-full mt-2" oninput="updatePsikis()" />
                     <p class="text-xs text-gray-400" id="valueFokus">5/10</p>
                 </div>
             </div>
@@ -114,7 +190,7 @@
         </section>
 
         <!-- ============ CHECK-IN HARIAN ============ -->
-        <section class="bg-white rounded-2xl shadow p-6">
+        <section class="bg-white rounded-2xl shadow-sm p-6 card-hover">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-semibold text-gray-800">📋 Check-in Hari Ini</h3>
                 <span class="text-xs text-gray-400" id="tanggalHariIni"></span>
@@ -168,20 +244,20 @@
             </div>
 
             <!-- Tombol Simpan -->
-            <button onclick="simpanCheckIn()" class="w-full bg-brand-600 text-white py-3 rounded-xl font-semibold hover:bg-brand-700 transition shadow-lg">
+            <button onclick="simpanCheckIn()" class="w-full bg-brand-600 text-white py-3 rounded-xl font-semibold hover:bg-brand-700 transition shadow-sm">
                 <i class="fa-solid fa-check mr-2"></i> Simpan Check-in
             </button>
         </section>
 
         <!-- ============ AI COACH ============ -->
-        <section class="bg-white rounded-2xl shadow p-6">
+        <section class="bg-white rounded-2xl shadow-sm p-6 card-hover">
             <div class="flex items-start gap-4">
                 <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 flex-shrink-0">
                     <i class="fa-solid fa-robot"></i>
                 </div>
                 <div class="flex-1">
                     <h3 class="font-semibold text-gray-800">🤖 AI Coach</h3>
-                    <div class="mt-2 bg-gray-50 p-4 rounded-xl text-sm text-gray-700" id="aiChatBox">
+                    <div class="mt-2 bg-gray-50 p-4 rounded-xl text-sm text-gray-700 min-h-[60px]" id="aiChatBox">
                         <p class="text-gray-400">AI Coach akan memberikan analisis setelah kamu check-in. Isi form di atas dan klik "Simpan Check-in".</p>
                     </div>
                     <div class="mt-3 flex gap-2">
@@ -214,9 +290,321 @@
     </main>
 
     <footer class="text-center text-xs text-gray-400 py-6">
-        Dibuat perdi and deepsek untuk akuntabilitas pribadi | © 2025
+        Dibuat untuk akuntabilitas pribadi | © 2025
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // ==================== DATA DEFAULT ====================
+        const HABITS_BAIK = [
+            'Olahraga pagi', 'Meditasi', 'Baca buku', 'Journaling',
+            'Makan sehat', 'Tidur cukup', 'Belajar terstruktur', 'Prospek klien'
+        ];
+        const HABITS_BURUK = [
+            'Scroll media sosial berlebihan', 'Tidur larut', 'Makan tidak sehat',
+            'Menunda pekerjaan', 'Stres berlebihan', 'Kurang gerak'
+        ];
+
+        let selectedStatus = null;
+
+        // ==================== INISIALISASI ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set tanggal hari ini
+            const now = new Date();
+            document.getElementById('tanggalHariIni').textContent = now.toLocaleDateString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            // Render kebiasaan
+            renderHabits('habitsBaikContainer', HABITS_BAIK, 'baik');
+            renderHabits('habitsBurukContainer', HABITS_BURUK, 'buruk');
+
+            // Load data dari localStorage
+            loadData();
+
+            // Update psikis awal
+            updatePsikis();
+
+            // Update metrik ringkasan
+            updateRingkasan();
+        });
+
+        // ==================== RENDER HABITS ====================
+        function renderHabits(containerId, habits, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            habits.forEach((habit, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-2';
+                const id = `habit_${type}_${index}`;
+                div.innerHTML = `
+                    <input type="checkbox" id="${id}" class="w-4 h-4 text-brand-600 rounded border-gray-300 focus:ring-brand-500" />
+                    <label for="${id}" class="text-sm text-gray-700">${habit}</label>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ==================== STATUS CHECK-IN ====================
+        function setStatus(el) {
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                btn.className = btn.className.replace(/ active-\w+/g, '');
+            });
+            el.classList.add('active-' + el.dataset.status);
+            selectedStatus = el.dataset.status;
+        }
+
+        // ==================== PSIKIS ====================
+        function updatePsikis() {
+            const stres = parseInt(document.getElementById('inputStres').value);
+            const mood = parseInt(document.getElementById('inputMood').value);
+            const energi = parseInt(document.getElementById('inputEnergi').value);
+            const fokus = parseInt(document.getElementById('inputFokus').value);
+
+            document.getElementById('valueStres').textContent = stres + '/10';
+            document.getElementById('valueMood').textContent = mood + '/10';
+            document.getElementById('valueEnergi').textContent = energi + '/10';
+            document.getElementById('valueFokus').textContent = fokus + '/10';
+
+            // Emoji
+            document.getElementById('emojiStres').textContent = stres <= 3 ? '😌' : stres <= 6 ? '😐' : '😰';
+            document.getElementById('emojiMood').textContent = mood >= 7 ? '😄' : mood >= 4 ? '🙂' : '😞';
+            document.getElementById('emojiEnergi').textContent = energi >= 7 ? '⚡' : energi >= 4 ? '🔋' : '🪫';
+            document.getElementById('emojiFokus').textContent = fokus >= 7 ? '🎯' : fokus >= 4 ? '📌' : '🌀';
+
+            // Indikator keseluruhan
+            const avg = (stres + mood + energi + fokus) / 4;
+            const indicator = document.getElementById('indikatorPsikis');
+            if (avg >= 7) {
+                indicator.className = 'mt-4 p-3 rounded-lg text-center text-sm font-medium bg-green-50 text-green-700 border border-green-200';
+                indicator.textContent = '🌟 Kondisi psikis sangat baik! Pertahankan.';
+            } else if (avg >= 5) {
+                indicator.className = 'mt-4 p-3 rounded-lg text-center text-sm font-medium bg-yellow-50 text-yellow-700 border border-yellow-200';
+                indicator.textContent = '📈 Kondisi cukup, ada ruang untuk perbaikan.';
+            } else {
+                indicator.className = 'mt-4 p-3 rounded-lg text-center text-sm font-medium bg-red-50 text-red-700 border border-red-200';
+                indicator.textContent = '⚠️ Perhatikan keseimbangan psikismu. Istirahat sejenak.';
+            }
+        }
+
+        // ==================== SIMPAN CHECK-IN ====================
+        function simpanCheckIn() {
+            const intention = document.getElementById('intentionText').value.trim();
+            const refleksi = document.getElementById('refleksiText').value.trim();
+            const status = selectedStatus || 'partial';
+
+            // Ambil kebiasaan terpilih
+            const habitsBaik = [];
+            document.querySelectorAll('#habitsBaikContainer input[type="checkbox"]:checked').forEach(cb => {
+                habitsBaik.push(cb.nextElementSibling.textContent.trim());
+            });
+            const habitsBuruk = [];
+            document.querySelectorAll('#habitsBurukContainer input[type="checkbox"]:checked').forEach(cb => {
+                habitsBuruk.push(cb.nextElementSibling.textContent.trim());
+            });
+
+            // Data psikis
+            const psikis = {
+                stres: parseInt(document.getElementById('inputStres').value),
+                mood: parseInt(document.getElementById('inputMood').value),
+                energi: parseInt(document.getElementById('inputEnergi').value),
+                fokus: parseInt(document.getElementById('inputFokus').value),
+            };
+
+            const data = {
+                tanggal: new Date().toISOString().split('T')[0],
+                intention,
+                status,
+                habitsBaik,
+                habitsBuruk,
+                refleksi,
+                psikis,
+                poin: hitungPoin(status, habitsBaik, habitsBuruk, psikis),
+            };
+
+            // Simpan ke localStorage
+            let history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
+            history.push(data);
+            localStorage.setItem('checkinHistory', JSON.stringify(history));
+
+            // Update UI
+            updatePoinTotal();
+            updateRingkasan();
+            tampilkanDampak(status);
+            tampilkanAICoach(data);
+
+            // Reset status tombol
+            document.querySelectorAll('.status-btn').forEach(btn => {
+                btn.className = btn.className.replace(/ active-\w+/g, '');
+            });
+            selectedStatus = null;
+
+            alert('✅ Check-in berhasil disimpan!');
+        }
+
+        // ==================== HITUNG POIN ====================
+        function hitungPoin(status, habitsBaik, habitsBuruk, psikis) {
+            let poin = 0;
+            // Status
+            if (status === 'done') poin += 10;
+            else if (status === 'partial') poin += 5;
+            else poin -= 5;
+
+            // Kebiasaan baik
+            poin += habitsBaik.length * 3;
+
+            // Kebiasaan buruk
+            poin -= habitsBuruk.length * 2;
+
+            // Psikis: rata-rata > 6 bonus
+            const avg = (psikis.stres + psikis.mood + psikis.energi + psikis.fokus) / 4;
+            if (avg >= 7) poin += 5;
+            else if (avg <= 3) poin -= 3;
+
+            return poin;
+        }
+
+        // ==================== UPDATE POIN TOTAL ====================
+        function updatePoinTotal() {
+            const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
+            const total = history.reduce((sum, item) => sum + (item.poin || 0), 0);
+            document.getElementById('poinTotal').textContent = total;
+        }
+
+        // ==================== UPDATE RINGKASAN ====================
+        function updateRingkasan() {
+            const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
+            if (history.length === 0) {
+                document.getElementById('avgStress').textContent = '-';
+                document.getElementById('avgMood').textContent = '-';
+                document.getElementById('avgEnergi').textContent = '-';
+                document.getElementById('avgFokus').textContent = '-';
+                return;
+            }
+            const latest = history[history.length - 1];
+            const p = latest.psikis || { stres: 0, mood: 0, energi: 0, fokus: 0 };
+            document.getElementById('avgStress').textContent = p.stres || '-';
+            document.getElementById('avgMood').textContent = p.mood || '-';
+            document.getElementById('avgEnergi').textContent = p.energi || '-';
+            document.getElementById('avgFokus').textContent = p.fokus || '-';
+        }
+
+        // ==================== TAMPILKAN DAMPAK ====================
+        function tampilkanDampak(status) {
+            const section = document.getElementById('dampakSection');
+            if (status === 'skipped') {
+                section.classList.remove('hidden');
+                // Randomisasi dampak
+                const hari = Math.floor(Math.random() * 3) + 1;
+                const poin = -(Math.floor(Math.random() * 10) + 10);
+                document.getElementById('dampakHari').textContent = `+${hari} hari`;
+                document.getElementById('dampakPoin').textContent = `${poin} poin`;
+                document.getElementById('dampakText').textContent =
+                    `Kamu melewatkan rencana hari ini. Estimasi pencapaian target mundur ${hari} hari dan poin berkurang ${Math.abs(poin)}.`;
+            } else {
+                section.classList.add('hidden');
+            }
+        }
+
+        // ==================== AI COACH ====================
+        function tampilkanAICoach(data) {
+            const box = document.getElementById('aiChatBox');
+            const p = data.psikis;
+            let saran = '';
+
+            if (p.stres > 7) saran += '⚠️ Stres tinggi, coba teknik pernapasan atau istirahat sejenak. ';
+            if (p.mood < 4) saran += '😔 Mood rendah, lakukan aktivitas yang menyenangkan. ';
+            if (p.energi < 4) saran += '🪫 Energi rendah, pastikan tidur cukup dan makan bergizi. ';
+            if (p.fokus < 4) saran += '🌀 Fokus rendah, gunakan teknik Pomodoro. ';
+
+            if (data.status === 'done') {
+                saran += '✅ Bagus, kamu menyelesaikan rencana hari ini! Pertahankan konsistensi. ';
+            } else if (data.status === 'partial') {
+                saran += '◐ Kamu menyelesaikan sebagian, identifikasi hambatan dan atasi besok. ';
+            } else {
+                saran += '❌ Kamu melewatkan hari ini, jangan menyerah, besok adalah kesempatan baru. ';
+            }
+
+            if (data.habitsBaik.length > 0) {
+                saran += `Kebiasaan baik: ${data.habitsBaik.join(', ')}. Teruskan! `;
+            }
+            if (data.habitsBuruk.length > 0) {
+                saran += `Perhatikan kebiasaan buruk: ${data.habitsBuruk.join(', ')}. `;
+            }
+
+            box.innerHTML = `<p class="text-gray-700">${saran}</p>`;
+        }
+
+        // ==================== KIRIM CHAT ====================
+        function kirimChat() {
+            const input = document.getElementById('chatInput');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const box = document.getElementById('aiChatBox');
+            // Simulasi balasan AI
+            const jawaban = `🤖 Terima kasih atas pertanyaanmu: "${msg}". Berdasarkan data hari ini, saya sarankan untuk fokus pada satu hal kecil yang bisa kamu tingkatkan. Apakah ada yang ingin kamu tanyakan lebih lanjut?`;
+            box.innerHTML = `<p class="text-gray-700">${jawaban}</p>`;
+            input.value = '';
+        }
+
+        // ==================== LOAD DATA ====================
+        function loadData() {
+            const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
+            if (history.length > 0) {
+                const last = history[history.length - 1];
+                document.getElementById('intentionText').value = last.intention || '';
+                document.getElementById('refleksiText').value = last.refleksi || '';
+
+                // Status
+                if (last.status) {
+                    const btn = document.querySelector(`.status-btn[data-status="${last.status}"]`);
+                    if (btn) setStatus(btn);
+                }
+
+                // Psikis
+                if (last.psikis) {
+                    document.getElementById('inputStres').value = last.psikis.stres || 3;
+                    document.getElementById('inputMood').value = last.psikis.mood || 7;
+                    document.getElementById('inputEnergi').value = last.psikis.energi || 6;
+                    document.getElementById('inputFokus').value = last.psikis.fokus || 5;
+                    updatePsikis();
+                }
+
+                // Habits
+                if (last.habitsBaik) {
+                    document.querySelectorAll('#habitsBaikContainer input[type="checkbox"]').forEach(cb => {
+                        const label = cb.nextElementSibling.textContent.trim();
+                        cb.checked = last.habitsBaik.includes(label);
+                    });
+                }
+                if (last.habitsBuruk) {
+                    document.querySelectorAll('#habitsBurukContainer input[type="checkbox"]').forEach(cb => {
+                        const label = cb.nextElementSibling.textContent.trim();
+                        cb.checked = last.habitsBuruk.includes(label);
+                    });
+                }
+
+                tampilkanAICoach(last);
+                tampilkanDampak(last.status);
+            }
+            updatePoinTotal();
+            updateRingkasan();
+        }
+
+        // ==================== RESET DATA ====================
+        function resetData() {
+            if (confirm('Yakin ingin menghapus semua data check-in?')) {
+                localStorage.removeItem('checkinHistory');
+                location.reload();
+            }
+        }
+
+        // ==================== TARGET & ESTIMASI (Contoh) ====================
+        // (Bisa dikembangkan lebih lanjut)
+        document.getElementById('targetUtama').textContent = '🏃 Lari 5 km nonstop';
+        document.getElementById('targetDateDisplay').textContent = '31 Des 2025';
+        document.getElementById('estimasiDisplay').textContent = '15 Nov 2025 (jika konsisten)';
+    </script>
+
 </body>
 </html>
