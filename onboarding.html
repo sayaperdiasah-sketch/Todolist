@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Onboarding — Jejak Menuju Target</title>
 
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -14,24 +19,45 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
                         brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
                         },
                         good: '#22c55e',
                         bad: '#ef4444',
-                        neutral: '#f59e0b',
+                        warning: '#f59e0b',
                     }
                 }
             }
         }
     </script>
+
+    <style>
+        input[type="range"] {
+            accent-color: #2563eb;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 999px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #2563eb;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen font-sans antialiased">
 
@@ -96,7 +122,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Tingkat stres saat ini: <span id="stresValue" class="font-bold text-brand-600">3/10</span>
                     </label>
-                    <input type="range" id="stres" min="1" max="10" value="3" class="w-full accent-brand-600" oninput="document.getElementById('stresValue').textContent = this.value + '/10'" />
+                    <input type="range" id="stres" min="1" max="10" value="3" class="w-full" oninput="document.getElementById('stresValue').textContent = this.value + '/10'" />
                     <div class="flex justify-between text-xs text-gray-400 mt-1">
                         <span>😌 Tenang</span>
                         <span>😰 Sangat Stres</span>
@@ -108,7 +134,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Suasana hati rata-rata: <span id="moodValue" class="font-bold text-brand-600">7/10</span>
                     </label>
-                    <input type="range" id="mood" min="1" max="10" value="7" class="w-full accent-brand-600" oninput="document.getElementById('moodValue').textContent = this.value + '/10'" />
+                    <input type="range" id="mood" min="1" max="10" value="7" class="w-full" oninput="document.getElementById('moodValue').textContent = this.value + '/10'" />
                     <div class="flex justify-between text-xs text-gray-400 mt-1">
                         <span>😔 Buruk</span>
                         <span>😄 Sangat Baik</span>
@@ -120,7 +146,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Level energi harian: <span id="energiValue" class="font-bold text-brand-600">6/10</span>
                     </label>
-                    <input type="range" id="energi" min="1" max="10" value="6" class="w-full accent-brand-600" oninput="document.getElementById('energiValue').textContent = this.value + '/10'" />
+                    <input type="range" id="energi" min="1" max="10" value="6" class="w-full" oninput="document.getElementById('energiValue').textContent = this.value + '/10'" />
                     <div class="flex justify-between text-xs text-gray-400 mt-1">
                         <span>🪫 Lelah</span>
                         <span>🔋 Penuh Energi</span>
@@ -132,7 +158,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Kemampuan fokus rata-rata: <span id="fokusValue" class="font-bold text-brand-600">5/10</span>
                     </label>
-                    <input type="range" id="fokus" min="1" max="10" value="5" class="w-full accent-brand-600" oninput="document.getElementById('fokusValue').textContent = this.value + '/10'" />
+                    <input type="range" id="fokus" min="1" max="10" value="5" class="w-full" oninput="document.getElementById('fokusValue').textContent = this.value + '/10'" />
                     <div class="flex justify-between text-xs text-gray-400 mt-1">
                         <span>🌀 Mudah terdistraksi</span>
                         <span>🎯 Sangat fokus</span>
@@ -152,17 +178,17 @@
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Waktu paling produktif</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button class="produktif-btn border border-gray-300 rounded-lg py-3 px-4 text-center hover:border-brand-500 transition" data-value="pagi">
+                    <button type="button" class="produktif-btn border border-gray-300 rounded-lg py-3 px-4 text-center hover:border-brand-500 transition" data-value="pagi">
                         <span class="text-2xl block">🌅</span>
                         <span class="text-sm font-medium">Pagi</span>
                         <span class="text-xs text-gray-400 block">04:00 - 11:00</span>
                     </button>
-                    <button class="produktif-btn border border-gray-300 rounded-lg py-3 px-4 text-center hover:border-brand-500 transition" data-value="siang">
+                    <button type="button" class="produktif-btn border border-gray-300 rounded-lg py-3 px-4 text-center hover:border-brand-500 transition" data-value="siang">
                         <span class="text-2xl block">☀️</span>
                         <span class="text-sm font-medium">Siang</span>
                         <span class="text-xs text-gray-400 block">11:00 - 16:00</span>
                     </button>
-                    <button class="produktif-btn border border-gray-300 rounded-lg py-3 px-4 text-center hover:border-brand-500 transition" data-value="malam">
+                    <button type="button" class="produktif-btn border border-gray-300 rounded-lg py-3 px-4 text-center hover:border-brand-500 transition" data-value="malam">
                         <span class="text-2xl block">🌙</span>
                         <span class="text-sm font-medium">Malam</span>
                         <span class="text-xs text-gray-400 block">16:00 - 23:00</span>
@@ -226,10 +252,8 @@
             <!-- Kebiasaan Baik -->
             <div class="mb-6">
                 <h3 class="font-semibold text-gray-700 mb-3">✅ Kebiasaan Baik (Poin Positif)</h3>
-                <div class="space-y-2" id="daftarKebiasaanBaik">
-                    <!-- Diisi oleh JS -->
-                </div>
-                <button id="tambahBaik" class="mt-2 text-sm text-brand-600 hover:text-brand-700 font-medium">
+                <div class="space-y-2" id="daftarKebiasaanBaik"></div>
+                <button type="button" id="tambahBaik" class="mt-2 text-sm text-brand-600 hover:text-brand-700 font-medium">
                     <i class="fa-solid fa-plus mr-1"></i> Tambah kebiasaan baik
                 </button>
             </div>
@@ -237,10 +261,8 @@
             <!-- Kebiasaan Buruk -->
             <div>
                 <h3 class="font-semibold text-gray-700 mb-3">❌ Kebiasaan Buruk (Poin Negatif)</h3>
-                <div class="space-y-2" id="daftarKebiasaanBuruk">
-                    <!-- Diisi oleh JS -->
-                </div>
-                <button id="tambahBuruk" class="mt-2 text-sm text-red-500 hover:text-red-600 font-medium">
+                <div class="space-y-2" id="daftarKebiasaanBuruk"></div>
+                <button type="button" id="tambahBuruk" class="mt-2 text-sm text-red-500 hover:text-red-600 font-medium">
                     <i class="fa-solid fa-plus mr-1"></i> Tambah kebiasaan buruk
                 </button>
             </div>
@@ -257,17 +279,17 @@
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Gaya coaching yang kamu inginkan</label>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <button class="gaya-btn border border-gray-300 rounded-lg p-4 text-center hover:border-brand-500 transition" data-value="tegas">
+                    <button type="button" class="gaya-btn border border-gray-300 rounded-lg p-4 text-center hover:border-brand-500 transition" data-value="tegas">
                         <span class="text-2xl block">🫡</span>
                         <span class="font-medium text-sm">Tegas & Disiplin</span>
                         <span class="text-xs text-gray-400 block">"Tidak ada alasan!"</span>
                     </button>
-                    <button class="gaya-btn border border-gray-300 rounded-lg p-4 text-center hover:border-brand-500 transition" data-value="supportif">
+                    <button type="button" class="gaya-btn border border-gray-300 rounded-lg p-4 text-center hover:border-brand-500 transition" data-value="supportif">
                         <span class="text-2xl block">🤗</span>
                         <span class="font-medium text-sm">Supportif & Lembut</span>
                         <span class="text-xs text-gray-400 block">"Tidak apa-apa, coba lagi"</span>
                     </button>
-                    <button class="gaya-btn border border-gray-300 rounded-lg p-4 text-center hover:border-brand-500 transition" data-value="analitis">
+                    <button type="button" class="gaya-btn border border-gray-300 rounded-lg p-4 text-center hover:border-brand-500 transition" data-value="analitis">
                         <span class="text-2xl block">📊</span>
                         <span class="font-medium text-sm">Analitis & Data-driven</span>
                         <span class="text-xs text-gray-400 block">"Berdasarkan data, kamu..."</span>
@@ -311,7 +333,7 @@
             });
             document.getElementById('progressBar').style.width = (currentStep / totalSteps * 100) + '%';
             document.getElementById('btnPrev').classList.toggle('hidden', currentStep === 1);
-            
+
             if (currentStep === totalSteps) {
                 document.getElementById('btnNext').innerHTML = 'Selesai <i class="fa-solid fa-check ml-2"></i>';
             } else {
@@ -320,6 +342,16 @@
         }
 
         document.getElementById('btnNext').addEventListener('click', () => {
+            if (currentStep === 1) {
+                // Validasi step 1
+                const nama = document.getElementById('nama').value.trim();
+                const target = document.getElementById('target').value.trim();
+                const targetDate = document.getElementById('targetDate').value;
+                if (!nama || !target || !targetDate) {
+                    alert('Mohon isi semua data diri dan target terlebih dahulu.');
+                    return;
+                }
+            }
             if (currentStep < totalSteps) {
                 currentStep++;
                 updateStep();
@@ -339,7 +371,11 @@
         const produktifBtns = document.querySelectorAll('.produktif-btn');
         produktifBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                produktifBtns.forEach(b => b.classList.remove('border-brand-500', 'bg-brand-50', 'text-brand-700'));
+                produktifBtns.forEach(b => {
+                    b.classList.remove('border-brand-500', 'bg-brand-50', 'text-brand-700');
+                    b.classList.add('border-gray-300');
+                    delete b.dataset.selected;
+                });
                 btn.classList.add('border-brand-500', 'bg-brand-50', 'text-brand-700');
                 btn.dataset.selected = 'true';
             });
@@ -349,30 +385,40 @@
         const gayaBtns = document.querySelectorAll('.gaya-btn');
         gayaBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                gayaBtns.forEach(b => b.classList.remove('border-brand-500', 'bg-brand-50'));
+                gayaBtns.forEach(b => {
+                    b.classList.remove('border-brand-500', 'bg-brand-50');
+                    b.classList.add('border-gray-300');
+                    delete b.dataset.selected;
+                });
                 btn.classList.add('border-brand-500', 'bg-brand-50');
                 btn.dataset.selected = 'true';
             });
         });
 
-        // ========== DAFTAR KEBIASAAN DEFAULT ==========
+        // ========== DAFTAR KEBIASAAN DEFAULT (samakan dengan script.js) ==========
         const defaultBaik = [
-            { nama: 'Olahraga 30 menit', poin: 10 },
-            { nama: 'Baca buku 20 menit', poin: 5 },
-            { nama: 'Meditasi 10 menit', poin: 5 },
-            { nama: 'Tidur sebelum jam 11 malam', poin: 8 },
+            { nama: 'Olahraga pagi', poin: 3 },
+            { nama: 'Meditasi', poin: 3 },
+            { nama: 'Baca buku', poin: 3 },
+            { nama: 'Journaling', poin: 3 },
+            { nama: 'Makan sehat', poin: 3 },
+            { nama: 'Tidur cukup', poin: 4 },
+            { nama: 'Belajar terstruktur', poin: 5 },
+            { nama: 'Prospek klien', poin: 5 }
         ];
         const defaultBuruk = [
-            { nama: 'Scroll media sosial > 1 jam', poin: -8 },
-            { nama: 'Begadang > jam 12 malam', poin: -10 },
-            { nama: 'Makan junk food', poin: -5 },
-            { nama: 'Menunda-nunda pekerjaan', poin: -15 },
+            { nama: 'Scroll media sosial berlebihan', poin: -3 },
+            { nama: 'Tidur larut', poin: -4 },
+            { nama: 'Makan tidak sehat', poin: -2 },
+            { nama: 'Menunda pekerjaan', poin: -5 },
+            { nama: 'Stres berlebihan', poin: -3 },
+            { nama: 'Kurang gerak', poin: -2 }
         ];
 
         function renderKebiasaan() {
             const baikContainer = document.getElementById('daftarKebiasaanBaik');
             const burukContainer = document.getElementById('daftarKebiasaanBuruk');
-            
+
             baikContainer.innerHTML = defaultBaik.map((k, i) => `
                 <div class="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
                     <div class="flex items-center gap-2">
@@ -381,7 +427,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-bold text-green-600">+${k.poin} poin</span>
-                        <button class="text-gray-400 hover:text-red-500" onclick="hapusKebiasaan('baik', ${i})">
+                        <button type="button" class="text-gray-400 hover:text-red-500" onclick="hapusKebiasaan('baik', ${i})">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
                     </div>
@@ -396,7 +442,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="text-xs font-bold text-red-500">${k.poin} poin</span>
-                        <button class="text-gray-400 hover:text-red-500" onclick="hapusKebiasaan('buruk', ${i})">
+                        <button type="button" class="text-gray-400 hover:text-red-500" onclick="hapusKebiasaan('buruk', ${i})">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
                     </div>
@@ -413,7 +459,7 @@
         document.getElementById('tambahBaik').addEventListener('click', () => {
             const nama = prompt('Nama kebiasaan baik:');
             if (nama) {
-                const poin = parseInt(prompt('Berapa poin positif? (1-20):', '5')) || 5;
+                const poin = parseInt(prompt('Berapa poin positif? (1-10):', '3')) || 3;
                 defaultBaik.push({ nama, poin });
                 renderKebiasaan();
             }
@@ -422,7 +468,7 @@
         document.getElementById('tambahBuruk').addEventListener('click', () => {
             const nama = prompt('Nama kebiasaan buruk:');
             if (nama) {
-                const poin = parseInt(prompt('Berapa poin negatif? (-1 sampai -20):', '-5')) || -5;
+                const poin = parseInt(prompt('Berapa poin negatif? (-1 sampai -10):', '-3')) || -3;
                 defaultBuruk.push({ nama, poin: poin < 0 ? poin : -poin });
                 renderKebiasaan();
             }
@@ -430,40 +476,34 @@
 
         // ========== SIMPAN DATA ==========
         function simpanData() {
-            const dataProfil = {
-                nama: document.getElementById('nama').value || 'User',
-                target: document.getElementById('target').value || 'Target belum diisi',
+            const profil = {
+                nama: document.getElementById('nama').value.trim(),
+                target: document.getElementById('target').value.trim(),
                 targetDate: document.getElementById('targetDate').value,
-                jamProduktif: document.getElementById('jamProduktif').value || 4,
-                // Kondisi psikis
+                jamProduktif: parseInt(document.getElementById('jamProduktif').value) || 4,
                 baseline: {
-                    stres: document.getElementById('stres').value,
-                    mood: document.getElementById('mood').value,
-                    energi: document.getElementById('energi').value,
-                    fokus: document.getElementById('fokus').value,
+                    stres: parseInt(document.getElementById('stres').value),
+                    mood: parseInt(document.getElementById('mood').value),
+                    energi: parseInt(document.getElementById('energi').value),
+                    fokus: parseInt(document.getElementById('fokus').value),
                 },
-                // Pola produktivitas
                 pola: {
                     waktuProduktif: document.querySelector('.produktif-btn[data-selected]')?.dataset.value || 'pagi',
                     durasiFokus: document.getElementById('durasiFokus').value,
                     penghambat: Array.from(document.querySelectorAll('.hambat-check:checked')).map(c => c.value),
                 },
-                // Kebiasaan
                 kebiasaan: {
                     baik: defaultBaik,
                     buruk: defaultBuruk,
                 },
-                // Preferensi coaching
                 preferensi: {
                     gayaCoaching: document.querySelector('.gaya-btn[data-selected]')?.dataset.value || 'supportif',
                     frekuensiIngat: document.getElementById('frekuensiIngat').value,
                 },
-                tanggalOnboarding: new Date().toISOString(),
-                poinTotal: 0,
-                riwayatCheckIn: [],
+                tanggalOnboarding: new Date().toISOString().split('T')[0],
             };
 
-            localStorage.setItem('profilUser', JSON.stringify(dataProfil));
+            localStorage.setItem('profilUser', JSON.stringify(profil));
             alert('🎉 Profil berhasil disimpan! Kamu akan diarahkan ke dashboard.');
             window.location.href = 'index.html';
         }
