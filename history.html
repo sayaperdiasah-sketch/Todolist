@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Riwayat Check-in — Jejak Menuju Target</title>
 
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
@@ -12,26 +17,37 @@
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
                         brand: {
-                            50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9',
-                            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e',
-                        }
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        },
+                        good: '#22c55e',
+                        bad: '#ef4444',
+                        warning: '#f59e0b',
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans antialiased">
+<body class="bg-gray-50 min-h-screen font-sans antialiased">
 
     <!-- Header -->
-    <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+    <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <button onclick="window.location.href='index.html'" class="text-gray-400 hover:text-brand-600 p-2">
+                <a href="index.html" class="text-gray-400 hover:text-brand-600 p-2">
                     <i class="fa-solid fa-arrow-left"></i>
-                </button>
+                </a>
                 <div>
                     <h1 class="text-lg font-bold text-gray-800">Riwayat Check-in</h1>
                     <p class="text-xs text-gray-400">Data harian untuk analisis ML</p>
@@ -43,29 +59,42 @@
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 py-6">
-        <!-- Statistik Ringkas -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+
+        <!-- ============ STATISTIK RINGKAS ============ -->
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="bg-white rounded-2xl shadow-sm p-4 text-center border-l-4 border-brand-500">
                 <p class="text-2xl font-bold text-brand-600" id="totalCheckin">0</p>
                 <p class="text-xs text-gray-500">Total Check-in</p>
             </div>
-            <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="bg-white rounded-2xl shadow-sm p-4 text-center border-l-4 border-green-500">
                 <p class="text-2xl font-bold text-green-600" id="totalBerhasil">0</p>
                 <p class="text-xs text-gray-500">Hari Berhasil (≥70%)</p>
             </div>
-            <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="bg-white rounded-2xl shadow-sm p-4 text-center border-l-4 border-red-500">
                 <p class="text-2xl font-bold text-red-600" id="totalGagal">0</p>
                 <p class="text-xs text-gray-500">Hari Kurang Berhasil</p>
             </div>
-            <div class="bg-white rounded-xl shadow p-4 text-center">
+            <div class="bg-white rounded-2xl shadow-sm p-4 text-center border-l-4 border-amber-500">
                 <p class="text-2xl font-bold text-amber-600" id="rerataRisk">-</p>
                 <p class="text-xs text-gray-500">Rata-rata Risk Score</p>
             </div>
         </section>
 
-        <!-- Tabel Riwayat -->
-        <section class="bg-white rounded-2xl shadow overflow-hidden">
+        <!-- Statistik tambahan screen time & tidur -->
+        <section class="grid grid-cols-2 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-white rounded-2xl shadow-sm p-4 text-center border-l-4 border-purple-500">
+                <p class="text-2xl font-bold text-purple-600" id="rerataScreenTime">-</p>
+                <p class="text-xs text-gray-500">Rata-rata Screen Time (jam)</p>
+            </div>
+            <div class="bg-white rounded-2xl shadow-sm p-4 text-center border-l-4 border-indigo-500">
+                <p class="text-2xl font-bold text-indigo-600" id="rerataTidur">-</p>
+                <p class="text-xs text-gray-500">Rata-rata Jam Tidur</p>
+            </div>
+        </section>
+
+        <!-- ============ TABEL RIWAYAT ============ -->
+        <section class="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div class="p-4 border-b border-gray-100">
                 <h3 class="font-semibold text-gray-800">📊 Detail Harian</h3>
             </div>
@@ -76,6 +105,8 @@
                             <th class="px-4 py-3 text-left text-gray-500">Tanggal</th>
                             <th class="px-4 py-3 text-left text-gray-500">Status</th>
                             <th class="px-4 py-3 text-left text-gray-500">Psikis (S/M/E/F)</th>
+                            <th class="px-4 py-3 text-left text-gray-500">Screen Time</th>
+                            <th class="px-4 py-3 text-left text-gray-500">Tidur</th>
                             <th class="px-4 py-3 text-left text-gray-500">Poin</th>
                             <th class="px-4 py-3 text-left text-gray-500">Risk</th>
                             <th class="px-4 py-3 text-left text-gray-500">Estimasi</th>
@@ -91,7 +122,12 @@
                 <p>Belum ada data check-in.</p>
             </div>
         </section>
+
     </main>
+
+    <footer class="text-center text-xs text-gray-400 py-6">
+        Dibuat untuk akuntabilitas pribadi | © 2025
+    </footer>
 
     <script>
         const STORAGE_KEY_RIWAYAT = 'riwayatCheckIn';
@@ -109,10 +145,19 @@
             document.getElementById('totalCheckin').textContent = riwayat.length;
             document.getElementById('totalBerhasil').textContent = riwayat.filter(r => r.apakah_berhasil).length;
             document.getElementById('totalGagal').textContent = riwayat.filter(r => !r.apakah_berhasil).length;
-            
+
             if (riwayat.length > 0) {
-                const avgRisk = riwayat.reduce((sum, r) => sum + r.risk_score_rule, 0) / riwayat.length;
+                const avgRisk = riwayat.reduce((sum, r) => sum + (r.risk_score_rule || 0), 0) / riwayat.length;
                 document.getElementById('rerataRisk').textContent = avgRisk.toFixed(1);
+
+                // Rata-rata screen time dan tidur
+                const avgScreen = riwayat.reduce((sum, r) => sum + (r.screen_time || 0), 0) / riwayat.length;
+                const avgTidur = riwayat.reduce((sum, r) => sum + (r.jam_tidur || 0), 0) / riwayat.length;
+                document.getElementById('rerataScreenTime').textContent = avgScreen.toFixed(1) + ' jam';
+                document.getElementById('rerataTidur').textContent = avgTidur.toFixed(1) + ' jam';
+            } else {
+                document.getElementById('rerataScreenTime').textContent = '-';
+                document.getElementById('rerataTidur').textContent = '-';
             }
 
             if (riwayat.length === 0) {
@@ -126,7 +171,7 @@
             riwayat.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
 
             tbody.innerHTML = riwayat.map(r => {
-                const statusBadge = r.status_checkin === 'done' 
+                const statusBadge = r.status_checkin === 'done'
                     ? '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Done</span>'
                     : r.status_checkin === 'partial'
                     ? '<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs font-semibold">Partial</span>'
@@ -134,10 +179,15 @@
 
                 const riskColor = r.risk_score_rule < 30 ? 'text-green-600' : r.risk_score_rule < 60 ? 'text-amber-600' : 'text-red-600';
 
+                const screenTimeDisplay = r.screen_time ? r.screen_time + ' jam' : '-';
+                const jamTidurDisplay = r.jam_tidur ? r.jam_tidur + ' jam' : '-';
+
                 return `<tr class="border-b border-gray-50 hover:bg-gray-50">
                     <td class="px-4 py-3 text-gray-700">${r.tanggal}</td>
                     <td class="px-4 py-3">${statusBadge}</td>
                     <td class="px-4 py-3 text-gray-600">${r.stres_level}/${r.mood_level}/${r.energi_level}/${r.fokus_level}</td>
+                    <td class="px-4 py-3 text-gray-600">${screenTimeDisplay}</td>
+                    <td class="px-4 py-3 text-gray-600">${jamTidurDisplay}</td>
                     <td class="px-4 py-3 font-semibold ${r.poin_harian >= 0 ? 'text-green-600' : 'text-red-600'}">${r.poin_harian > 0 ? '+' : ''}${r.poin_harian}</td>
                     <td class="px-4 py-3 font-bold ${riskColor}">${r.risk_score_rule}</td>
                     <td class="px-4 py-3 text-gray-600">${r.estimasi_tanggal}</td>
@@ -152,13 +202,14 @@
                 return;
             }
 
-            // Tentukan kolom
+            // Tentukan kolom sesuai data yang disimpan script.js
             const kolom = [
                 'tanggal','hari_ke','hari_dalam_minggu','jam_checkin',
                 'jumlah_intention','intention_text','jam_direncanakan','jam_aktual',
                 'status_checkin','persentase_penyelesaian',
+                'screen_time','jam_tidur',
                 'stres_level','mood_level','energi_level','fokus_level',
-                'jumlah_kebiasaan_baik','poin_kebiasaan_baik',
+                'jumlah_kebiasaan_baik','poin_kebiasaan_baik','detail_kebiasaan_baik',
                 'jumlah_kebiasaan_buruk','poin_kebiasaan_buruk','detail_kebiasaan_buruk',
                 'ada_gangguan','jenis_gangguan',
                 'progress_goal','risk_score_rule','estimasi_mundur_hari',
@@ -170,7 +221,7 @@
             riwayat.forEach(r => {
                 const row = kolom.map(k => {
                     let val = r[k] !== undefined ? r[k] : '';
-                    // Tangani koma dan kutip
+                    // Tangani koma, kutip, dan newline
                     if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
                         val = '"' + val.replace(/"/g, '""') + '"';
                     }
