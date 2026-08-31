@@ -3,345 +3,220 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Activity Dashboard</title>
+    <title>Dashboard — Jejak Menuju Target</title>
 
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com">
-    </script>
-
-    <!-- Font Awesome untuk ikon -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-    <!-- Custom config Tailwind (warna brand) -->
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        }
+                            50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9',
+                            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e',
+                        },
+                        good: '#22c55e',
+                        bad: '#ef4444',
+                        neutral: '#f59e0b',
                     }
                 }
             }
         }
     </script>
-
-    <style>
-        /* Gaya tambahan untuk tampilan yang lebih rapi */
-        .tab-active {
-            border-bottom: 3px solid #0ea5e9;
-            color: #0c4a6e;
-            font-weight: 600;
-        }
-        .tab-inactive {
-            color: #6b7280;
-            border-bottom: 3px solid transparent;
-        }
-        .tab-inactive:hover {
-            color: #374151;
-        }
-        .schedule-grid {
-            display: grid;
-            grid-template-columns: 60px repeat(5, 1fr);
-            gap: 2px;
-        }
-        .schedule-cell {
-            background-color: #f9fafb;
-            border-radius: 8px;
-            padding: 8px 4px;
-            min-height: 60px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            text-align: center;
-        }
-        .schedule-cell.time-label {
-            background-color: transparent;
-            font-weight: 500;
-            color: #6b7280;
-            font-size: 13px;
-        }
-        .schedule-cell .task-name {
-            font-weight: 600;
-            color: #1f2937;
-            font-size: 12px;
-            line-height: 1.2;
-        }
-        .schedule-cell .task-dur {
-            font-size: 10px;
-            color: #6b7280;
-            margin-top: 2px;
-        }
-        .schedule-cell .task-icon {
-            font-size: 14px;
-            color: #0ea5e9;
-            margin-bottom: 2px;
-        }
-        /* Untuk membuat badge tab */
-        .tab-badge {
-            background-color: #e5e7eb;
-            border-radius: 9999px;
-            padding: 0 8px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #4b5563;
-            margin-left: 6px;
-        }
-        .tab-active .tab-badge {
-            background-color: #0ea5e9;
-            color: white;
-        }
-    </style>
 </head>
 <body class="bg-gray-100 min-h-screen font-sans antialiased">
 
-    <!-- ===================== HEADER ===================== -->
+    <!-- Header -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <span class="text-lg font-semibold text-gray-800">Hi, Naeem!</span>
+                <div class="bg-brand-600 text-white p-2 rounded-lg">
+                    <i class="fa-solid fa-route"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-800">Jejak Menuju Target</h1>
+                    <p class="text-xs text-gray-400" id="namaUser">User</p>
+                </div>
             </div>
-            <div class="flex items-center gap-4">
-                <button class="text-gray-500 hover:text-gray-700 text-lg relative">
-                    <i class="fa-regular fa-bell"></i>
-                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-white"></span>
+            <div class="flex items-center gap-2">
+                <button onclick="window.location.href='history.html'" class="text-gray-400 hover:text-brand-600 p-2">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
                 </button>
-                <div class="w-9 h-9 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 font-bold text-sm">N</div>
+                <button onclick="window.location.href='habits.html'" class="text-gray-400 hover:text-brand-600 p-2">
+                    <i class="fa-solid fa-gear"></i>
+                </button>
             </div>
         </div>
     </header>
 
-    <!-- ===================== MAIN CONTENT ===================== -->
-    <main class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <main class="max-w-5xl mx-auto px-4 py-6 space-y-6">
 
-        <!-- ==================== ACTIVITY ==================== -->
+        <!-- ============ KARTU TARGET & POIN ============ -->
         <section class="bg-white rounded-2xl shadow p-6">
-            <!-- Tab Navigation -->
-            <div class="flex items-center justify-between border-b border-gray-200 pb-2">
-                <div class="flex space-x-6 text-sm font-medium">
-                    <button class="tab-active pb-2 flex items-center">
-                        Last week
-                        <span class="tab-badge">5</span>
-                    </button>
-                    <button class="tab-inactive pb-2 flex items-center hover:border-b-2 hover:border-gray-300 transition">
-                        Upcoming
-                        <span class="tab-badge">12</span>
-                    </button>
-                    <button class="tab-inactive pb-2 flex items-center hover:border-b-2 hover:border-gray-300 transition">
-                        In Progress
-                        <span class="tab-badge">60</span>
-                    </button>
-                    <button class="tab-inactive pb-2 flex items-center hover:border-b-2 hover:border-gray-300 transition">
-                        Completed
-                        <span class="tab-badge">28</span>
-                    </button>
-                </div>
-                <span class="text-xs text-gray-400"><i class="fa-regular fa-calendar mr-1"></i>This week</span>
-            </div>
-
-            <!-- Konten tab (contoh untuk Last week) -->
-            <div class="mt-4 space-y-3">
-                <!-- Item aktivitas 1 -->
-                <div class="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition">
-                    <div class="w-8 h-8 rounded-full bg-brand-100 flex items-center justify-center text-brand-600 flex-shrink-0">
-                        <i class="fa-regular fa-file-lines"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-800">Product Design Review</p>
-                        <p class="text-xs text-gray-400">Completed · 2 days ago</p>
-                    </div>
-                    <span class="text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">Done</span>
-                </div>
-                <!-- Item aktivitas 2 -->
-                <div class="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition">
-                    <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 flex-shrink-0">
-                        <i class="fa-regular fa-clock"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-800">Client Meeting Prep</p>
-                        <p class="text-xs text-gray-400">In Progress · 1 day ago</p>
-                    </div>
-                    <span class="text-xs text-amber-600 font-medium bg-amber-50 px-2 py-1 rounded-full">Ongoing</span>
-                </div>
-                <!-- Item aktivitas 3 -->
-                <div class="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition">
-                    <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 flex-shrink-0">
-                        <i class="fa-regular fa-calendar"></i>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <p class="text-sm font-medium text-gray-800">Upcoming Sprint Planning</p>
-                        <p class="text-xs text-gray-400">Upcoming · Tomorrow</p>
-                    </div>
-                    <span class="text-xs text-blue-600 font-medium bg-blue-50 px-2 py-1 rounded-full">Scheduled</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- ==================== PRODUCT & TOTAL TASKS ==================== -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Kartu Product -->
-            <div class="bg-white rounded-2xl shadow p-6">
-                <div class="flex items-center justify-between">
-                    <h3 class="font-semibold text-gray-800 text-lg">Product</h3>
-                    <span class="text-xs text-gray-400 bg-gray-100 px-3 py-1 rounded-full">Total Tasks</span>
-                </div>
-                <div class="mt-4">
-                    <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-600">Product Design</span>
-                        <span class="text-sm font-semibold text-gray-800">20 <span class="text-xs text-green-600 font-normal">Completed</span></span>
-                    </div>
-                    <div class="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div class="h-full bg-brand-500 rounded-full" style="width: 45%"></div>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-400 mt-1">
-                        <span>0%</span>
-                        <span>100%</span>
-                    </div>
-                </div>
-                <div class="mt-4 p-4 bg-gray-50 rounded-xl text-sm text-gray-600 italic">
-                    <i class="fa-regular fa-message mr-2"></i>
-                    “It is a long established fact that a reader will be distracted by the readable.”
-                </div>
-            </div>
-
-            <!-- Ringkasan cepat (opsional) bisa diisi statistik lain -->
-            <div class="bg-white rounded-2xl shadow p-6 flex flex-col justify-between">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h3 class="font-semibold text-gray-800 text-lg">Ringkasan</h3>
-                    <div class="mt-4 grid grid-cols-2 gap-4">
-                        <div class="bg-gray-50 p-3 rounded-xl text-center">
-                            <p class="text-2xl font-bold text-brand-600">12</p>
-                            <p class="text-xs text-gray-500">Upcoming</p>
+                    <p class="text-sm text-gray-400 uppercase tracking-wide">🎯 Target Utama</p>
+                    <h2 class="text-xl font-bold text-gray-800 mt-1" id="targetUtama">Belum diisi</h2>
+                    <div class="mt-3 flex flex-wrap gap-3 text-sm">
+                        <div class="bg-gray-50 px-3 py-2 rounded-lg">
+                            <span class="text-gray-500">Target:</span>
+                            <span class="font-semibold text-gray-700" id="targetDateDisplay">-</span>
                         </div>
-                        <div class="bg-gray-50 p-3 rounded-xl text-center">
-                            <p class="text-2xl font-bold text-amber-600">60</p>
-                            <p class="text-xs text-gray-500">In Progress</p>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-xl text-center">
-                            <p class="text-2xl font-bold text-green-600">28</p>
-                            <p class="text-xs text-gray-500">Completed</p>
-                        </div>
-                        <div class="bg-gray-50 p-3 rounded-xl text-center">
-                            <p class="text-2xl font-bold text-purple-600">5</p>
-                            <p class="text-xs text-gray-500">Last week</p>
+                        <div class="bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
+                            <span class="text-amber-600">Estimasi:</span>
+                            <span class="font-bold text-amber-800" id="estimasiDisplay">-</span>
                         </div>
                     </div>
                 </div>
-                <div class="mt-4 text-xs text-gray-400">
-                    <i class="fa-regular fa-circle-check mr-1 text-green-500"></i> 20 dari 48 tugas selesai
+                <!-- Poin Total -->
+                <div class="text-center bg-gradient-to-br from-brand-500 to-brand-700 text-white rounded-2xl px-6 py-4 shadow-lg">
+                    <p class="text-3xl font-bold" id="poinTotal">0</p>
+                    <p class="text-xs opacity-80 font-medium">POIN TOTAL</p>
                 </div>
             </div>
         </section>
 
-        <!-- ==================== YOUR SCHEDULE ==================== -->
+        <!-- ============ STATUS PSIKIS HARI INI ============ -->
+        <section class="bg-white rounded-2xl shadow p-6">
+            <h3 class="font-semibold text-gray-800 mb-4">🧠 Kondisi Psikis Hari Ini</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <p class="text-2xl" id="emojiStres">😌</p>
+                    <p class="text-sm font-semibold text-gray-700" id="labelStres">Stres</p>
+                    <input type="range" id="inputStres" min="1" max="10" value="3" class="w-full mt-2 accent-red-500" oninput="updatePsikis()" />
+                    <p class="text-xs text-gray-400" id="valueStres">3/10</p>
+                </div>
+                <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <p class="text-2xl" id="emojiMood">😄</p>
+                    <p class="text-sm font-semibold text-gray-700" id="labelMood">Mood</p>
+                    <input type="range" id="inputMood" min="1" max="10" value="7" class="w-full mt-2 accent-yellow-500" oninput="updatePsikis()" />
+                    <p class="text-xs text-gray-400" id="valueMood">7/10</p>
+                </div>
+                <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <p class="text-2xl" id="emojiEnergi">🔋</p>
+                    <p class="text-sm font-semibold text-gray-700" id="labelEnergi">Energi</p>
+                    <input type="range" id="inputEnergi" min="1" max="10" value="6" class="w-full mt-2 accent-green-500" oninput="updatePsikis()" />
+                    <p class="text-xs text-gray-400" id="valueEnergi">6/10</p>
+                </div>
+                <div class="text-center p-3 bg-gray-50 rounded-xl">
+                    <p class="text-2xl" id="emojiFokus">🎯</p>
+                    <p class="text-sm font-semibold text-gray-700" id="labelFokus">Fokus</p>
+                    <input type="range" id="inputFokus" min="1" max="10" value="5" class="w-full mt-2 accent-blue-500" oninput="updatePsikis()" />
+                    <p class="text-xs text-gray-400" id="valueFokus">5/10</p>
+                </div>
+            </div>
+            <!-- Indikator kondisi psikis keseluruhan -->
+            <div class="mt-4 p-3 rounded-lg text-center text-sm font-medium" id="indikatorPsikis">
+                <!-- Diisi JS -->
+            </div>
+        </section>
+
+        <!-- ============ CHECK-IN HARIAN ============ -->
         <section class="bg-white rounded-2xl shadow p-6">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-semibold text-gray-800 text-lg">Your Schedule</h3>
-                <button class="text-sm text-brand-600 hover:text-brand-800 font-medium flex items-center gap-1">
-                    <i class="fa-regular fa-pen-to-square"></i> Edit
-                </button>
+                <h3 class="font-semibold text-gray-800">📋 Check-in Hari Ini</h3>
+                <span class="text-xs text-gray-400" id="tanggalHariIni"></span>
             </div>
 
-            <!-- Grid jadwal -->
-            <div class="schedule-grid">
-                <!-- Header hari -->
-                <div class="schedule-cell time-label"></div>
-                <div class="schedule-cell time-label font-bold text-gray-700">Mon</div>
-                <div class="schedule-cell time-label font-bold text-gray-700">Tue</div>
-                <div class="schedule-cell time-label font-bold text-gray-700">Wed</div>
-                <div class="schedule-cell time-label font-bold text-gray-700">Thu</div>
-                <div class="schedule-cell time-label font-bold text-gray-700">Fri</div>
+            <!-- Intention / Rencana -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Apa rencanamu hari ini untuk mendukung target?</label>
+                <textarea id="intentionText" rows="2" placeholder="Contoh: Belajar React 2 jam, prospek 5 client baru..." class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+            </div>
 
-                <!-- Jam 10 -->
-                <div class="schedule-cell time-label">10:00</div>
-                <div class="schedule-cell" style="background-color: #e0f2fe;">
-                    <span class="task-icon"><i class="fa-regular fa-pen-ruler"></i></span>
-                    <span class="task-name">Design</span>
-                    <span class="task-dur">412</span>
-                </div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell" style="background-color: #fef3c7;">
-                    <span class="task-icon"><i class="fa-regular fa-pen-ruler"></i></span>
-                    <span class="task-name">Design</span>
-                    <span class="task-dur">412</span>
-                </div>
-
-                <!-- Jam 11 -->
-                <div class="schedule-cell time-label">11:00</div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell" style="background-color: #dbeafe;">
-                    <span class="task-icon"><i class="fa-regular fa-cube"></i></span>
-                    <span class="task-name">Prototype</span>
-                    <span class="task-dur">412</span>
-                </div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-
-                <!-- Jam 12 -->
-                <div class="schedule-cell time-label">12:00</div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell" style="background-color: #e0f2fe;">
-                    <span class="task-icon"><i class="fa-regular fa-layer-group"></i></span>
-                    <span class="task-name">UI Design &amp; Prototype</span>
-                    <span class="task-dur">412</span>
-                </div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-
-                <!-- Jam 13 -->
-                <div class="schedule-cell time-label">13:00</div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell" style="background-color: #fce7f3;">
-                    <span class="task-icon"><i class="fa-regular fa-magnifying-glass"></i></span>
-                    <span class="task-name">Research</span>
-                    <span class="task-dur">412</span>
-                </div>
-                <div class="schedule-cell"></div>
-
-                <!-- Jam 14 -->
-                <div class="schedule-cell time-label">14:00</div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell"></div>
-                <div class="schedule-cell" style="background-color: #e0f2fe;">
-                    <span class="task-icon"><i class="fa-regular fa-users"></i></span>
-                    <span class="task-name">UX Research &amp; Design</span>
-                    <span class="task-dur">412</span>
+            <!-- Status Check-in -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Status pelaksanaan:</label>
+                <div class="grid grid-cols-3 gap-2">
+                    <button class="status-btn border-2 border-gray-200 rounded-lg py-3 text-center hover:border-green-500 transition" data-status="done" onclick="setStatus(this)">
+                        <span class="text-2xl block">✅</span>
+                        <span class="text-sm font-medium">Selesai</span>
+                    </button>
+                    <button class="status-btn border-2 border-gray-200 rounded-lg py-3 text-center hover:border-amber-500 transition" data-status="partial" onclick="setStatus(this)">
+                        <span class="text-2xl block">◐</span>
+                        <span class="text-sm font-medium">Sebagian</span>
+                    </button>
+                    <button class="status-btn border-2 border-gray-200 rounded-lg py-3 text-center hover:border-red-500 transition" data-status="skipped" onclick="setStatus(this)">
+                        <span class="text-2xl block">❌</span>
+                        <span class="text-sm font-medium">Dilewati</span>
+                    </button>
                 </div>
             </div>
 
-            <!-- Keterangan kecil -->
-            <div class="mt-4 flex flex-wrap gap-4 text-xs text-gray-500">
-                <span><span class="inline-block w-3 h-3 rounded-full bg-blue-100 mr-1"></span> Design</span>
-                <span><span class="inline-block w-3 h-3 rounded-full bg-yellow-100 mr-1"></span> Prototype</span>
-                <span><span class="inline-block w-3 h-3 rounded-full bg-pink-100 mr-1"></span> Research</span>
-                <span><span class="inline-block w-3 h-3 rounded-full bg-blue-50 mr-1"></span> UX</span>
-                <span class="text-gray-400"><i class="fa-regular fa-clock mr-1"></i> Durasi dalam menit</span>
+            <!-- Kebiasaan Baik -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">✅ Kebiasaan baik yang dilakukan hari ini:</label>
+                <div id="habitsBaikContainer" class="space-y-2">
+                    <!-- Diisi JS -->
+                </div>
+            </div>
+
+            <!-- Kebiasaan Buruk -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">❌ Kebiasaan buruk yang terjadi hari ini:</label>
+                <div id="habitsBurukContainer" class="space-y-2">
+                    <!-- Diisi JS -->
+                </div>
+            </div>
+
+            <!-- Refleksi -->
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Refleksi singkat (opsional):</label>
+                <input type="text" id="refleksiText" placeholder="Apa yang kamu rasakan hari ini?" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+            </div>
+
+            <!-- Tombol Simpan -->
+            <button onclick="simpanCheckIn()" class="w-full bg-brand-600 text-white py-3 rounded-xl font-semibold hover:bg-brand-700 transition shadow-lg">
+                <i class="fa-solid fa-check mr-2"></i> Simpan Check-in
+            </button>
+        </section>
+
+        <!-- ============ AI COACH ============ -->
+        <section class="bg-white rounded-2xl shadow p-6">
+            <div class="flex items-start gap-4">
+                <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center text-brand-700 flex-shrink-0">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="flex-1">
+                    <h3 class="font-semibold text-gray-800">🤖 AI Coach</h3>
+                    <div class="mt-2 bg-gray-50 p-4 rounded-xl text-sm text-gray-700" id="aiChatBox">
+                        <p class="text-gray-400">AI Coach akan memberikan analisis setelah kamu check-in. Isi form di atas dan klik "Simpan Check-in".</p>
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <input type="text" id="chatInput" placeholder="Tanyakan ke AI Coach..." class="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                        <button onclick="kirimChat()" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 transition">Kirim</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ DAMPAK JIKA TERLEWAT ============ -->
+        <section id="dampakSection" class="hidden">
+            <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6">
+                <div class="flex items-start gap-3">
+                    <div class="text-3xl">⚠️</div>
+                    <div>
+                        <h3 class="font-bold text-red-700 text-lg">Dampak Terdeteksi!</h3>
+                        <p class="text-sm text-red-600 mt-1" id="dampakText">
+                            Kamu melewatkan rencana hari ini. Estimasi pencapaian target mundur.
+                        </p>
+                        <div class="mt-3 flex gap-3 text-sm">
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold" id="dampakHari">+2 hari</span>
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold" id="dampakPoin">-15 poin</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- ===================== FOOTER ===================== -->
-    <footer class="text-center text-xs text-gray-400 py-6 border-t border-gray-200 mt-6">
-        Dibuat dengan ❤️ untuk akuntabilitas pribadi &bull; © 2025
+    <footer class="text-center text-xs text-gray-400 py-6">
+        Dibuat dengan ❤️ untuk akuntabilitas pribadi | © 2025
     </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
