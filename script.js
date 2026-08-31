@@ -90,8 +90,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Estimasi
     const riwayat = getRiwayat();
-    const estimasi = riwayat.length > 0 
-        ? riwayat[riwayat.length - 1].estimasi_tanggal 
+    const estimasi = riwayat.length > 0
+        ? riwayat[riwayat.length - 1].estimasi_tanggal
         : profil.targetDate;
     document.getElementById('estimasiDisplay').textContent = estimasi;
 
@@ -99,10 +99,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const poinTotal = riwayat.reduce((sum, r) => sum + (r.poin_harian || 0), 0);
     document.getElementById('poinTotal').textContent = poinTotal;
 
-    // Tanggal hari ini
-    document.getElementById('tanggalHariIni').textContent = new Date().toLocaleDateString('id-ID', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
+    // Tanggal hari ini (real-time)
+    const tanggalEl = document.getElementById('tanggalHariIni');
+    function updateTanggal() {
+        tanggalEl.textContent = new Date().toLocaleString('id-ID', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    }
+    updateTanggal();
+    setInterval(updateTanggal, 1000); // update setiap detik
 
     // Set nilai default slider psikis dari baseline profil
     if (profil.baseline) {
@@ -245,7 +256,6 @@ function simpanCheckIn() {
     let totalPoinBaik = kebiasaanBaikTerpilih.reduce((sum, k) => sum + k.poin, 0);
     let totalPoinBuruk = kebiasaanBurukTerpilih.reduce((sum, k) => sum + k.poin, 0); // poin negatif
 
-    // Poin tambahan dari screen time dan tidur
     let poinScreen = 0;
     let poinTidur = 0;
     const detailBaikTambahan = [];
@@ -399,7 +409,7 @@ function simpanCheckIn() {
     document.querySelectorAll('.kebiasaan-baik-check, .kebiasaan-buruk-check').forEach(cb => cb.checked = false);
 
     alert('✅ Check-in berhasil disimpan!');
-    location.reload(); // opsional, agar data langsung termuat
+    location.reload(); // agar data langsung termuat
 }
 
 // ==================== PERINGATAN ====================
