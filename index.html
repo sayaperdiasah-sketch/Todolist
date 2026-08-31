@@ -40,7 +40,6 @@
     </script>
 
     <style>
-        /* Custom style untuk slider */
         input[type="range"] {
             accent-color: #2563eb;
             height: 4px;
@@ -68,7 +67,6 @@
             border-color: #ef4444;
             background: #fef2f2;
         }
-        /* Animasi card */
         .card-hover {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -96,9 +94,9 @@
                 <button onclick="resetData()" class="text-gray-400 hover:text-brand-600 p-2" title="Reset semua data">
                     <i class="fa-solid fa-rotate-right"></i>
                 </button>
-                <button onclick="window.location.href='#history'" class="text-gray-400 hover:text-brand-600 p-2">
+                <a href="history.html" class="text-gray-400 hover:text-brand-600 p-2" title="Lihat riwayat">
                     <i class="fa-solid fa-clock-rotate-left"></i>
-                </button>
+                </a>
             </div>
         </div>
     </header>
@@ -134,7 +132,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                     <p class="text-sm text-gray-400 uppercase tracking-wide">🎯 Target Utama</p>
-                    <h2 class="text-xl font-bold text-gray-800 mt-1" id="targetUtama">Belum diisi</h2>
+                    <h2 class="text-xl font-bold text-gray-800 mt-1" id="targetUtama">Belum diatur</h2>
                     <div class="mt-3 flex flex-wrap gap-3 text-sm">
                         <div class="bg-gray-50 px-3 py-2 rounded-lg">
                             <span class="text-gray-500">Target:</span>
@@ -146,7 +144,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Poin Total -->
                 <div class="text-center bg-gradient-to-br from-brand-500 to-brand-700 text-white rounded-2xl px-6 py-4 shadow-lg">
                     <p class="text-3xl font-bold" id="poinTotal">0</p>
                     <p class="text-xs opacity-80 font-medium">POIN TOTAL</p>
@@ -183,10 +180,7 @@
                     <p class="text-xs text-gray-400" id="valueFokus">5/10</p>
                 </div>
             </div>
-            <!-- Indikator kondisi psikis keseluruhan -->
-            <div class="mt-4 p-3 rounded-lg text-center text-sm font-medium" id="indikatorPsikis">
-                <!-- Diisi JS -->
-            </div>
+            <div class="mt-4 p-3 rounded-lg text-center text-sm font-medium" id="indikatorPsikis"></div>
         </section>
 
         <!-- ============ CHECK-IN HARIAN ============ -->
@@ -198,7 +192,7 @@
 
             <!-- Intention / Rencana -->
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Apa rencanamu hari ini untuk mendukung target?</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Apa rencanamu hari ini untuk mendukung target? <span class="text-red-500">*</span></label>
                 <textarea id="intentionText" rows="2" placeholder="Contoh: Belajar React 2 jam, prospek 5 client baru..." class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
             </div>
 
@@ -221,20 +215,33 @@
                 </div>
             </div>
 
+            <!-- Input Screen Time & Tidur -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">📱 Screen time hari ini (jam)</label>
+                    <input type="number" id="screenTime" min="0" max="24" step="0.5" placeholder="Misal: 9.5" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">😴 Jam tidur semalam (jam)</label>
+                    <input type="number" id="jamTidur" min="0" max="24" step="0.5" placeholder="Misal: 7.5" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-500" />
+                </div>
+            </div>
+            <div id="warningContainer" class="hidden mb-4">
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-3 text-sm text-orange-700">
+                    ⚠️ <span id="warningText"></span>
+                </div>
+            </div>
+
             <!-- Kebiasaan Baik -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">✅ Kebiasaan baik yang dilakukan hari ini:</label>
-                <div id="habitsBaikContainer" class="space-y-2">
-                    <!-- Diisi JS -->
-                </div>
+                <div id="habitsBaikContainer" class="space-y-2"></div>
             </div>
 
             <!-- Kebiasaan Buruk -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">❌ Kebiasaan buruk yang terjadi hari ini:</label>
-                <div id="habitsBurukContainer" class="space-y-2">
-                    <!-- Diisi JS -->
-                </div>
+                <div id="habitsBurukContainer" class="space-y-2"></div>
             </div>
 
             <!-- Refleksi -->
@@ -243,7 +250,6 @@
                 <input type="text" id="refleksiText" placeholder="Apa yang kamu rasakan hari ini?" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-500" />
             </div>
 
-            <!-- Tombol Simpan -->
             <button onclick="simpanCheckIn()" class="w-full bg-brand-600 text-white py-3 rounded-xl font-semibold hover:bg-brand-700 transition shadow-sm">
                 <i class="fa-solid fa-check mr-2"></i> Simpan Check-in
             </button>
@@ -258,7 +264,7 @@
                 <div class="flex-1">
                     <h3 class="font-semibold text-gray-800">🤖 AI Coach</h3>
                     <div class="mt-2 bg-gray-50 p-4 rounded-xl text-sm text-gray-700 min-h-[60px]" id="aiChatBox">
-                        <p class="text-gray-400">AI Coach akan memberikan analisis setelah kamu check-in. Isi form di atas dan klik "Simpan Check-in".</p>
+                        <p class="text-gray-400">AI Coach akan memberikan analisis setelah kamu check-in.</p>
                     </div>
                     <div class="mt-3 flex gap-2">
                         <input type="text" id="chatInput" placeholder="Tanyakan ke AI Coach..." class="flex-1 border border-gray-200 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500" />
@@ -268,19 +274,17 @@
             </div>
         </section>
 
-        <!-- ============ DAMPAK JIKA TERLEWAT ============ -->
+        <!-- ============ DAMPAK ============ -->
         <section id="dampakSection" class="hidden">
             <div class="bg-red-50 border-2 border-red-200 rounded-2xl p-6">
                 <div class="flex items-start gap-3">
                     <div class="text-3xl">⚠️</div>
                     <div>
                         <h3 class="font-bold text-red-700 text-lg">Dampak Terdeteksi!</h3>
-                        <p class="text-sm text-red-600 mt-1" id="dampakText">
-                            Kamu melewatkan rencana hari ini. Estimasi pencapaian target mundur.
-                        </p>
+                        <p class="text-sm text-red-600 mt-1" id="dampakText"></p>
                         <div class="mt-3 flex gap-3 text-sm">
-                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold" id="dampakHari">+2 hari</span>
-                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold" id="dampakPoin">-15 poin</span>
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold" id="dampakHari">+0 hari</span>
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-semibold" id="dampakPoin">0 poin</span>
                         </div>
                     </div>
                 </div>
@@ -294,7 +298,10 @@
     </footer>
 
     <script>
-        // ==================== DATA DEFAULT ====================
+        // ==================== KONSTANTA ====================
+        const STORAGE_KEY_PROFIL = 'profilUser';
+        const STORAGE_KEY_RIWAYAT = 'riwayatCheckIn';
+
         const HABITS_BAIK = [
             'Olahraga pagi', 'Meditasi', 'Baca buku', 'Journaling',
             'Makan sehat', 'Tidur cukup', 'Belajar terstruktur', 'Prospek klien'
@@ -305,10 +312,64 @@
         ];
 
         let selectedStatus = null;
+        let kebiasaanBaikTerpilih = [];
+        let kebiasaanBurukTerpilih = [];
+
+        // ==================== UTILITAS ====================
+        function getProfil() {
+            let profil = JSON.parse(localStorage.getItem(STORAGE_KEY_PROFIL));
+            if (!profil) {
+                profil = {
+                    nama: 'User',
+                    target: '🏃 Lari 5 km nonstop',
+                    targetDate: '2025-12-31',
+                    tanggalOnboarding: new Date().toISOString().split('T')[0],
+                    jamProduktif: 4,
+                    baseline: { stres: 3, mood: 7, energi: 6, fokus: 5 }
+                };
+                localStorage.setItem(STORAGE_KEY_PROFIL, JSON.stringify(profil));
+            }
+            return profil;
+        }
+
+        function getRiwayat() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY_RIWAYAT)) || [];
+        }
+
+        function saveRiwayat(riwayat) {
+            localStorage.setItem(STORAGE_KEY_RIWAYAT, JSON.stringify(riwayat));
+        }
+
+        function formatTanggal(date = new Date()) {
+            return date.toISOString().split('T')[0];
+        }
+
+        function hitungHariKe(tanggalMulai, tanggalSekarang = new Date()) {
+            const mulai = new Date(tanggalMulai);
+            const sekarang = new Date(tanggalSekarang);
+            const diff = Math.floor((sekarang - mulai) / (1000 * 60 * 60 * 24));
+            return diff + 1;
+        }
+
+        function tambahHari(tanggalStr, jumlahHari) {
+            const tanggal = new Date(tanggalStr);
+            tanggal.setDate(tanggal.getDate() + jumlahHari);
+            return formatTanggal(tanggal);
+        }
 
         // ==================== INISIALISASI ====================
         document.addEventListener('DOMContentLoaded', function() {
-            // Set tanggal hari ini
+            const profil = getProfil();
+            document.getElementById('namaUser').textContent = profil.nama;
+            document.getElementById('targetUtama').textContent = profil.target;
+            document.getElementById('targetDateDisplay').textContent = profil.targetDate;
+
+            // Estimasi awal
+            const riwayat = getRiwayat();
+            const estimasi = riwayat.length > 0 ? riwayat[riwayat.length - 1].estimasi_tanggal : profil.targetDate;
+            document.getElementById('estimasiDisplay').textContent = estimasi;
+
+            // Tanggal
             const now = new Date();
             document.getElementById('tanggalHariIni').textContent = now.toLocaleDateString('id-ID', {
                 weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
@@ -318,14 +379,17 @@
             renderHabits('habitsBaikContainer', HABITS_BAIK, 'baik');
             renderHabits('habitsBurukContainer', HABITS_BURUK, 'buruk');
 
-            // Load data dari localStorage
-            loadData();
-
-            // Update psikis awal
+            // Set slider baseline
+            if (profil.baseline) {
+                document.getElementById('inputStres').value = profil.baseline.stres;
+                document.getElementById('inputMood').value = profil.baseline.mood;
+                document.getElementById('inputEnergi').value = profil.baseline.energi;
+                document.getElementById('inputFokus').value = profil.baseline.fokus;
+            }
             updatePsikis();
-
-            // Update metrik ringkasan
+            updatePoinTotal();
             updateRingkasan();
+            loadLastData();
         });
 
         // ==================== RENDER HABITS ====================
@@ -337,19 +401,39 @@
                 div.className = 'flex items-center gap-2';
                 const id = `habit_${type}_${index}`;
                 div.innerHTML = `
-                    <input type="checkbox" id="${id}" class="w-4 h-4 text-brand-600 rounded border-gray-300 focus:ring-brand-500" />
+                    <input type="checkbox" id="${id}" class="w-4 h-4 text-brand-600 rounded border-gray-300 focus:ring-brand-500" 
+                           onchange="toggleHabit('${type}', '${habit}', this.checked)" />
                     <label for="${id}" class="text-sm text-gray-700">${habit}</label>
                 `;
                 container.appendChild(div);
             });
         }
 
-        // ==================== STATUS CHECK-IN ====================
+        function toggleHabit(type, nama, checked) {
+            if (type === 'baik') {
+                if (checked) kebiasaanBaikTerpilih.push(nama);
+                else kebiasaanBaikTerpilih = kebiasaanBaikTerpilih.filter(h => h !== nama);
+            } else {
+                if (checked) kebiasaanBurukTerpilih.push(nama);
+                else kebiasaanBurukTerpilih = kebiasaanBurukTerpilih.filter(h => h !== nama);
+            }
+        }
+
+        // ==================== STATUS ====================
         function setStatus(el) {
             document.querySelectorAll('.status-btn').forEach(btn => {
-                btn.className = btn.className.replace(/ active-\w+/g, '');
+                btn.classList.remove('active-done', 'active-partial', 'active-skipped');
+                btn.classList.remove('border-green-500', 'bg-green-50', 'border-amber-500', 'bg-amber-50', 'border-red-500', 'bg-red-50');
+                btn.classList.add('border-2', 'border-gray-200');
             });
             el.classList.add('active-' + el.dataset.status);
+            if (el.dataset.status === 'done') {
+                el.classList.add('border-green-500', 'bg-green-50');
+            } else if (el.dataset.status === 'partial') {
+                el.classList.add('border-amber-500', 'bg-amber-50');
+            } else {
+                el.classList.add('border-red-500', 'bg-red-50');
+            }
             selectedStatus = el.dataset.status;
         }
 
@@ -365,13 +449,11 @@
             document.getElementById('valueEnergi').textContent = energi + '/10';
             document.getElementById('valueFokus').textContent = fokus + '/10';
 
-            // Emoji
             document.getElementById('emojiStres').textContent = stres <= 3 ? '😌' : stres <= 6 ? '😐' : '😰';
             document.getElementById('emojiMood').textContent = mood >= 7 ? '😄' : mood >= 4 ? '🙂' : '😞';
             document.getElementById('emojiEnergi').textContent = energi >= 7 ? '⚡' : energi >= 4 ? '🔋' : '🪫';
             document.getElementById('emojiFokus').textContent = fokus >= 7 ? '🎯' : fokus >= 4 ? '📌' : '🌀';
 
-            // Indikator keseluruhan
             const avg = (stres + mood + energi + fokus) / 4;
             const indicator = document.getElementById('indikatorPsikis');
             if (avg >= 7) {
@@ -389,221 +471,320 @@
         // ==================== SIMPAN CHECK-IN ====================
         function simpanCheckIn() {
             const intention = document.getElementById('intentionText').value.trim();
-            const refleksi = document.getElementById('refleksiText').value.trim();
-            const status = selectedStatus || 'partial';
+            if (!intention) {
+                alert('⚠️ Rencana hari ini wajib diisi!');
+                return;
+            }
+            if (!selectedStatus) {
+                alert('⚠️ Pilih status pelaksanaan terlebih dahulu.');
+                return;
+            }
 
-            // Ambil kebiasaan terpilih
-            const habitsBaik = [];
-            document.querySelectorAll('#habitsBaikContainer input[type="checkbox"]:checked').forEach(cb => {
-                habitsBaik.push(cb.nextElementSibling.textContent.trim());
-            });
-            const habitsBuruk = [];
-            document.querySelectorAll('#habitsBurukContainer input[type="checkbox"]:checked').forEach(cb => {
-                habitsBuruk.push(cb.nextElementSibling.textContent.trim());
-            });
+            const profil = getProfil();
+            const screenTime = parseFloat(document.getElementById('screenTime').value) || 0;
+            const jamTidur = parseFloat(document.getElementById('jamTidur').value) || 0;
 
-            // Data psikis
-            const psikis = {
-                stres: parseInt(document.getElementById('inputStres').value),
-                mood: parseInt(document.getElementById('inputMood').value),
-                energi: parseInt(document.getElementById('inputEnergi').value),
-                fokus: parseInt(document.getElementById('inputFokus').value),
+            // Validasi
+            if (screenTime < 0 || screenTime > 24 || jamTidur < 0 || jamTidur > 24) {
+                alert('⚠️ Masukkan angka yang wajar untuk screen time dan tidur.');
+                return;
+            }
+
+            const stres = parseInt(document.getElementById('inputStres').value);
+            const mood = parseInt(document.getElementById('inputMood').value);
+            const energi = parseInt(document.getElementById('inputEnergi').value);
+            const fokus = parseInt(document.getElementById('inputFokus').value);
+
+            // Hitung poin kebiasaan centang
+            let totalPoinBaik = kebiasaanBaikTerpilih.length * 3;
+            let totalPoinBuruk = kebiasaanBurukTerpilih.length * -2;
+
+            // Poin tambahan dari screen time dan tidur
+            let poinScreen = 0, poinTidur = 0;
+            if (screenTime > 10) {
+                poinScreen = -5;
+                kebiasaanBurukTerpilih.push(`Screen time ${screenTime} jam (>10 jam)`);
+            } else if (screenTime > 8) {
+                poinScreen = -3;
+                kebiasaanBurukTerpilih.push(`Screen time ${screenTime} jam (>8 jam)`);
+            } else if (screenTime > 0 && screenTime < 4) {
+                poinScreen = 5;
+                kebiasaanBaikTerpilih.push(`Screen time ${screenTime} jam (<4 jam)`);
+            }
+
+            if (jamTidur < 6 && jamTidur > 0) {
+                poinTidur = -4;
+                kebiasaanBurukTerpilih.push(`Tidur ${jamTidur} jam (<6 jam)`);
+            } else if (jamTidur >= 7 && jamTidur <= 9) {
+                poinTidur = 3;
+                kebiasaanBaikTerpilih.push(`Tidur ${jamTidur} jam (ideal)`);
+            }
+
+            totalPoinBaik += poinScreen > 0 ? poinScreen : 0;
+            totalPoinBuruk += poinScreen < 0 ? poinScreen : 0;
+            totalPoinBaik += poinTidur > 0 ? poinTidur : 0;
+            totalPoinBuruk += poinTidur < 0 ? poinTidur : 0;
+
+            // Poin status
+            let poinStatus = 0;
+            if (selectedStatus === 'done') poinStatus = 10;
+            else if (selectedStatus === 'partial') poinStatus = 5;
+            else poinStatus = -5;
+
+            // Poin psikis
+            const avgPsikis = (stres + mood + energi + fokus) / 4;
+            let poinPsikis = 0;
+            if (avgPsikis >= 7) poinPsikis = 5;
+            else if (avgPsikis <= 3) poinPsikis = -3;
+
+            const poinHarian = totalPoinBaik + totalPoinBuruk + poinStatus + poinPsikis;
+
+            // Estimasi tanggal
+            const riwayat = getRiwayat();
+            let estimasiTanggal = profil.targetDate;
+            if (riwayat.length > 0) estimasiTanggal = riwayat[riwayat.length - 1].estimasi_tanggal;
+
+            let penaltiHari = 0;
+            if (selectedStatus === 'skipped') {
+                penaltiHari = 2;
+                estimasiTanggal = tambahHari(estimasiTanggal, 2);
+            } else if (selectedStatus === 'partial') {
+                penaltiHari = 1;
+                estimasiTanggal = tambahHari(estimasiTanggal, 1);
+            }
+
+            // Risk score sederhana
+            let riskScore = 0;
+            if (selectedStatus === 'skipped') riskScore += 40;
+            else if (selectedStatus === 'partial') riskScore += 20;
+            riskScore += Math.max(0, (stres - 5) * 3);
+            riskScore += Math.max(0, (5 - mood) * 2);
+            riskScore += Math.max(0, (5 - energi) * 2);
+            riskScore += Math.max(0, (5 - fokus) * 2);
+            riskScore += Math.abs(totalPoinBuruk) * 0.5;
+            if (screenTime > 8) riskScore += 10;
+            if (jamTidur < 6 && jamTidur > 0) riskScore += 15;
+            riskScore = Math.min(100, Math.round(riskScore));
+
+            // Bangun data check-in
+            const dataCheckIn = {
+                tanggal: formatTanggal(),
+                hari_ke: hitungHariKe(profil.tanggalOnboarding || formatTanggal()),
+                hari_dalam_minggu: new Date().getDay(),
+                jam_checkin: new Date().toTimeString().slice(0,5),
+                intention_text: intention,
+                jumlah_intention: 1,
+                jam_direncanakan: profil.jamProduktif || 4,
+                jam_aktual: selectedStatus === 'done' ? (profil.jamProduktif || 4) : selectedStatus === 'partial' ? (profil.jamProduktif || 4) * 0.5 : 0,
+                status_checkin: selectedStatus,
+                persentase_penyelesaian: selectedStatus === 'done' ? 1.0 : selectedStatus === 'partial' ? 0.5 : 0.0,
+                screen_time: screenTime,
+                jam_tidur: jamTidur,
+                stres_level: stres,
+                mood_level: mood,
+                energi_level: energi,
+                fokus_level: fokus,
+                jumlah_kebiasaan_baik: kebiasaanBaikTerpilih.length,
+                poin_kebiasaan_baik: totalPoinBaik,
+                jumlah_kebiasaan_buruk: kebiasaanBurukTerpilih.length,
+                poin_kebiasaan_buruk: totalPoinBuruk,
+                detail_kebiasaan_buruk: kebiasaanBurukTerpilih.join(', '),
+                detail_kebiasaan_baik: kebiasaanBaikTerpilih.join(', '),
+                ada_gangguan: false,
+                jenis_gangguan: '',
+                progress_goal: hitungProgressGoal(riwayat),
+                risk_score_rule: riskScore,
+                estimasi_mundur_hari: penaltiHari,
+                poin_harian: poinHarian,
+                poin_total: riwayat.reduce((sum, r) => sum + (r.poin_harian || 0), 0) + poinHarian,
+                refleksi: document.getElementById('refleksiText').value.trim(),
+                estimasi_tanggal: estimasiTanggal,
+                apakah_berhasil: (selectedStatus === 'done') || (selectedStatus === 'partial' && 0.5 >= 0.7) ? true : false
             };
 
-            const data = {
-                tanggal: new Date().toISOString().split('T')[0],
-                intention,
-                status,
-                habitsBaik,
-                habitsBuruk,
-                refleksi,
-                psikis,
-                poin: hitungPoin(status, habitsBaik, habitsBuruk, psikis),
-            };
+            riwayat.push(dataCheckIn);
+            saveRiwayat(riwayat);
 
-            // Simpan ke localStorage
-            let history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
-            history.push(data);
-            localStorage.setItem('checkinHistory', JSON.stringify(history));
+            // Tampilkan dampak
+            const dampakSection = document.getElementById('dampakSection');
+            if (selectedStatus !== 'done') {
+                dampakSection.classList.remove('hidden');
+                document.getElementById('dampakHari').textContent = `+${penaltiHari} hari`;
+                document.getElementById('dampakPoin').textContent = `${totalPoinBuruk} poin`;
+                document.getElementById('dampakText').textContent =
+                    selectedStatus === 'skipped' ?
+                    `Kamu melewatkan rencana hari ini. Estimasi mundur ${penaltiHari} hari.` :
+                    `Kamu hanya menyelesaikan sebagian. Estimasi mundur ${penaltiHari} hari.`;
+            } else {
+                dampakSection.classList.add('hidden');
+            }
 
             // Update UI
-            updatePoinTotal();
+            document.getElementById('estimasiDisplay').textContent = estimasiTanggal;
+            document.getElementById('poinTotal').textContent = dataCheckIn.poin_total;
             updateRingkasan();
-            tampilkanDampak(status);
-            tampilkanAICoach(data);
+            tampilkanAICoach(dataCheckIn);
 
-            // Reset status tombol
+            // Peringatan screen time/tidur
+            tampilkanPeringatan(screenTime, jamTidur);
+
+            // Reset form
+            document.getElementById('intentionText').value = '';
+            document.getElementById('refleksiText').value = '';
+            document.getElementById('screenTime').value = '';
+            document.getElementById('jamTidur').value = '';
             document.querySelectorAll('.status-btn').forEach(btn => {
-                btn.className = btn.className.replace(/ active-\w+/g, '');
+                btn.classList.remove('active-done', 'active-partial', 'active-skipped');
+                btn.classList.remove('border-green-500', 'bg-green-50', 'border-amber-500', 'bg-amber-50', 'border-red-500', 'bg-red-50');
+                btn.classList.add('border-2', 'border-gray-200');
             });
             selectedStatus = null;
+            kebiasaanBaikTerpilih = [];
+            kebiasaanBurukTerpilih = [];
+            document.querySelectorAll('#habitsBaikContainer input[type="checkbox"], #habitsBurukContainer input[type="checkbox"]').forEach(cb => cb.checked = false);
 
             alert('✅ Check-in berhasil disimpan!');
         }
 
-        // ==================== HITUNG POIN ====================
-        function hitungPoin(status, habitsBaik, habitsBuruk, psikis) {
-            let poin = 0;
-            // Status
-            if (status === 'done') poin += 10;
-            else if (status === 'partial') poin += 5;
-            else poin -= 5;
-
-            // Kebiasaan baik
-            poin += habitsBaik.length * 3;
-
-            // Kebiasaan buruk
-            poin -= habitsBuruk.length * 2;
-
-            // Psikis: rata-rata > 6 bonus
-            const avg = (psikis.stres + psikis.mood + psikis.energi + psikis.fokus) / 4;
-            if (avg >= 7) poin += 5;
-            else if (avg <= 3) poin -= 3;
-
-            return poin;
+        function tampilkanPeringatan(screenTime, jamTidur) {
+            const container = document.getElementById('warningContainer');
+            const text = document.getElementById('warningText');
+            let warnings = [];
+            if (screenTime > 8) warnings.push(`Screen time ${screenTime} jam – kurangi!`);
+            if (jamTidur < 6 && jamTidur > 0) warnings.push(`Tidur ${jamTidur} jam – kurang!`);
+            if (warnings.length > 0) {
+                container.classList.remove('hidden');
+                text.textContent = warnings.join(' ');
+            } else {
+                container.classList.add('hidden');
+            }
         }
 
-        // ==================== UPDATE POIN TOTAL ====================
+        // ==================== FUNGSI PENDUKUNG ====================
+        function hitungProgressGoal(riwayat) {
+            const profil = getProfil();
+            if (!profil || !profil.targetDate) return 0;
+            const mulai = new Date(profil.tanggalOnboarding || Date.now());
+            const target = new Date(profil.targetDate);
+            const totalHari = Math.max(1, (target - mulai) / (1000 * 60 * 60 * 24));
+            const hariIni = hitungHariKe(profil.tanggalOnboarding || formatTanggal());
+            return Math.min(1, hariIni / totalHari);
+        }
+
         function updatePoinTotal() {
-            const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
-            const total = history.reduce((sum, item) => sum + (item.poin || 0), 0);
+            const riwayat = getRiwayat();
+            const total = riwayat.reduce((sum, item) => sum + (item.poin_harian || 0), 0);
             document.getElementById('poinTotal').textContent = total;
         }
 
-        // ==================== UPDATE RINGKASAN ====================
         function updateRingkasan() {
-            const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
-            if (history.length === 0) {
+            const riwayat = getRiwayat();
+            if (riwayat.length === 0) {
                 document.getElementById('avgStress').textContent = '-';
                 document.getElementById('avgMood').textContent = '-';
                 document.getElementById('avgEnergi').textContent = '-';
                 document.getElementById('avgFokus').textContent = '-';
                 return;
             }
-            const latest = history[history.length - 1];
-            const p = latest.psikis || { stres: 0, mood: 0, energi: 0, fokus: 0 };
-            document.getElementById('avgStress').textContent = p.stres || '-';
-            document.getElementById('avgMood').textContent = p.mood || '-';
-            document.getElementById('avgEnergi').textContent = p.energi || '-';
-            document.getElementById('avgFokus').textContent = p.fokus || '-';
+            const latest = riwayat[riwayat.length - 1];
+            document.getElementById('avgStress').textContent = latest.stres_level || '-';
+            document.getElementById('avgMood').textContent = latest.mood_level || '-';
+            document.getElementById('avgEnergi').textContent = latest.energi_level || '-';
+            document.getElementById('avgFokus').textContent = latest.fokus_level || '-';
         }
 
-        // ==================== TAMPILKAN DAMPAK ====================
-        function tampilkanDampak(status) {
-            const section = document.getElementById('dampakSection');
-            if (status === 'skipped') {
-                section.classList.remove('hidden');
-                // Randomisasi dampak
-                const hari = Math.floor(Math.random() * 3) + 1;
-                const poin = -(Math.floor(Math.random() * 10) + 10);
-                document.getElementById('dampakHari').textContent = `+${hari} hari`;
-                document.getElementById('dampakPoin').textContent = `${poin} poin`;
-                document.getElementById('dampakText').textContent =
-                    `Kamu melewatkan rencana hari ini. Estimasi pencapaian target mundur ${hari} hari dan poin berkurang ${Math.abs(poin)}.`;
-            } else {
-                section.classList.add('hidden');
-            }
-        }
-
-        // ==================== AI COACH ====================
         function tampilkanAICoach(data) {
             const box = document.getElementById('aiChatBox');
-            const p = data.psikis;
             let saran = '';
-
-            if (p.stres > 7) saran += '⚠️ Stres tinggi, coba teknik pernapasan atau istirahat sejenak. ';
-            if (p.mood < 4) saran += '😔 Mood rendah, lakukan aktivitas yang menyenangkan. ';
-            if (p.energi < 4) saran += '🪫 Energi rendah, pastikan tidur cukup dan makan bergizi. ';
-            if (p.fokus < 4) saran += '🌀 Fokus rendah, gunakan teknik Pomodoro. ';
-
-            if (data.status === 'done') {
-                saran += '✅ Bagus, kamu menyelesaikan rencana hari ini! Pertahankan konsistensi. ';
-            } else if (data.status === 'partial') {
-                saran += '◐ Kamu menyelesaikan sebagian, identifikasi hambatan dan atasi besok. ';
-            } else {
-                saran += '❌ Kamu melewatkan hari ini, jangan menyerah, besok adalah kesempatan baru. ';
-            }
-
-            if (data.habitsBaik.length > 0) {
-                saran += `Kebiasaan baik: ${data.habitsBaik.join(', ')}. Teruskan! `;
-            }
-            if (data.habitsBuruk.length > 0) {
-                saran += `Perhatikan kebiasaan buruk: ${data.habitsBuruk.join(', ')}. `;
-            }
-
+            if (data.stres_level > 7) saran += '⚠️ Stres tinggi, coba teknik pernapasan. ';
+            if (data.mood_level < 4) saran += '😔 Mood rendah, lakukan aktivitas menyenangkan. ';
+            if (data.energi_level < 4) saran += '🪫 Energi rendah, pastikan tidur & makan. ';
+            if (data.fokus_level < 4) saran += '🌀 Fokus rendah, gunakan Pomodoro. ';
+            if (data.screen_time > 8) saran += `📱 Screen time ${data.screen_time} jam, kurangi untuk produktivitas. `;
+            if (data.jam_tidur < 6 && data.jam_tidur > 0) saran += `😴 Tidur ${data.jam_tidur} jam, usahakan 7-8 jam. `;
+            if (data.status_checkin === 'done') saran += '✅ Bagus! Rencana selesai. ';
+            else if (data.status_checkin === 'partial') saran += '◐ Sebagian selesai, identifikasi hambatan. ';
+            else saran += '❌ Hari terlewat, besok mulai lagi. ';
+            if (data.detail_kebiasaan_baik) saran += `Baik: ${data.detail_kebiasaan_baik}. `;
+            if (data.detail_kebiasaan_buruk) saran += `Buruk: ${data.detail_kebiasaan_buruk}. `;
             box.innerHTML = `<p class="text-gray-700">${saran}</p>`;
         }
 
-        // ==================== KIRIM CHAT ====================
-        function kirimChat() {
-            const input = document.getElementById('chatInput');
-            const msg = input.value.trim();
-            if (!msg) return;
-
-            const box = document.getElementById('aiChatBox');
-            // Simulasi balasan AI
-            const jawaban = `🤖 Terima kasih atas pertanyaanmu: "${msg}". Berdasarkan data hari ini, saya sarankan untuk fokus pada satu hal kecil yang bisa kamu tingkatkan. Apakah ada yang ingin kamu tanyakan lebih lanjut?`;
-            box.innerHTML = `<p class="text-gray-700">${jawaban}</p>`;
-            input.value = '';
-        }
-
-        // ==================== LOAD DATA ====================
-        function loadData() {
-            const history = JSON.parse(localStorage.getItem('checkinHistory') || '[]');
-            if (history.length > 0) {
-                const last = history[history.length - 1];
-                document.getElementById('intentionText').value = last.intention || '';
+        function loadLastData() {
+            const riwayat = getRiwayat();
+            if (riwayat.length > 0) {
+                const last = riwayat[riwayat.length - 1];
+                document.getElementById('intentionText').value = last.intention_text || '';
                 document.getElementById('refleksiText').value = last.refleksi || '';
-
-                // Status
-                if (last.status) {
-                    const btn = document.querySelector(`.status-btn[data-status="${last.status}"]`);
+                document.getElementById('screenTime').value = last.screen_time || '';
+                document.getElementById('jamTidur').value = last.jam_tidur || '';
+                if (last.status_checkin) {
+                    const btn = document.querySelector(`.status-btn[data-status="${last.status_checkin}"]`);
                     if (btn) setStatus(btn);
                 }
-
-                // Psikis
-                if (last.psikis) {
-                    document.getElementById('inputStres').value = last.psikis.stres || 3;
-                    document.getElementById('inputMood').value = last.psikis.mood || 7;
-                    document.getElementById('inputEnergi').value = last.psikis.energi || 6;
-                    document.getElementById('inputFokus').value = last.psikis.fokus || 5;
+                if (last.stres_level) {
+                    document.getElementById('inputStres').value = last.stres_level;
+                    document.getElementById('inputMood').value = last.mood_level;
+                    document.getElementById('inputEnergi').value = last.energi_level;
+                    document.getElementById('inputFokus').value = last.fokus_level;
                     updatePsikis();
                 }
-
                 // Habits
-                if (last.habitsBaik) {
+                if (last.detail_kebiasaan_baik) {
+                    const arr = last.detail_kebiasaan_baik.split(', ');
                     document.querySelectorAll('#habitsBaikContainer input[type="checkbox"]').forEach(cb => {
                         const label = cb.nextElementSibling.textContent.trim();
-                        cb.checked = last.habitsBaik.includes(label);
+                        if (arr.includes(label)) {
+                            cb.checked = true;
+                            kebiasaanBaikTerpilih.push(label);
+                        }
                     });
                 }
-                if (last.habitsBuruk) {
+                if (last.detail_kebiasaan_buruk) {
+                    const arr = last.detail_kebiasaan_buruk.split(', ');
                     document.querySelectorAll('#habitsBurukContainer input[type="checkbox"]').forEach(cb => {
                         const label = cb.nextElementSibling.textContent.trim();
-                        cb.checked = last.habitsBuruk.includes(label);
+                        if (arr.includes(label)) {
+                            cb.checked = true;
+                            kebiasaanBurukTerpilih.push(label);
+                        }
                     });
                 }
-
                 tampilkanAICoach(last);
-                tampilkanDampak(last.status);
+                tampilkanPeringatan(last.screen_time || 0, last.jam_tidur || 0);
+                if (last.status_checkin === 'skipped' || last.status_checkin === 'partial') {
+                    document.getElementById('dampakSection').classList.remove('hidden');
+                    document.getElementById('dampakHari').textContent = `+${last.estimasi_mundur_hari || 0} hari`;
+                    document.getElementById('dampakPoin').textContent = `${last.poin_kebiasaan_buruk || 0} poin`;
+                    document.getElementById('dampakText').textContent = last.status_checkin === 'skipped' ? 'Kamu melewatkan rencana hari ini.' : 'Kamu hanya menyelesaikan sebagian rencana.';
+                }
             }
             updatePoinTotal();
             updateRingkasan();
         }
 
-        // ==================== RESET DATA ====================
+        // ==================== CHAT ====================
+        function kirimChat() {
+            const input = document.getElementById('chatInput');
+            const pesan = input.value.trim();
+            if (!pesan) return;
+            const box = document.getElementById('aiChatBox');
+            box.innerHTML += `<p class="mt-2"><strong>Kamu:</strong> ${pesan}</p>`;
+            input.value = '';
+            setTimeout(() => {
+                box.innerHTML += `<p class="mt-2"><strong>AI Coach:</strong> Terima kasih atas pertanyaanmu. Saya sarankan fokus pada satu kebiasaan kecil untuk diperbaiki. Tetap semangat!</p>`;
+                box.scrollTop = box.scrollHeight;
+            }, 500);
+        }
+
+        // ==================== RESET ====================
         function resetData() {
-            if (confirm('Yakin ingin menghapus semua data check-in?')) {
-                localStorage.removeItem('checkinHistory');
+            if (confirm('Yakin ingin menghapus semua data check-in dan profil?')) {
+                localStorage.removeItem(STORAGE_KEY_PROFIL);
+                localStorage.removeItem(STORAGE_KEY_RIWAYAT);
                 location.reload();
             }
         }
-
-        // ==================== TARGET & ESTIMASI (Contoh) ====================
-        // (Bisa dikembangkan lebih lanjut)
-        document.getElementById('targetUtama').textContent = '🏃 Lari 5 km nonstop';
-        document.getElementById('targetDateDisplay').textContent = '31 Des 2025';
-        document.getElementById('estimasiDisplay').textContent = '15 Nov 2025 (jika konsisten)';
     </script>
 
 </body>
