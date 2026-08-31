@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Riwayat Check-in — Jejak Menuju Target</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9',
+                            600: '#0284c7', 700: '#0369a1', 800: '#075985', 900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen font-sans antialiased">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button onclick="window.location.href='index.html'" class="text-gray-400 hover:text-brand-600 p-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-bold text-gray-800">Riwayat Check-in</h1>
+                    <p class="text-xs text-gray-400">Data harian untuk analisis ML</p>
+                </div>
+            </div>
+            <button onclick="exportCSV()" class="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-brand-700 transition">
+                <i class="fa-solid fa-download mr-1"></i> Export CSV
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-6">
+        <!-- Statistik Ringkas -->
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white rounded-xl shadow p-4 text-center">
+                <p class="text-2xl font-bold text-brand-600" id="totalCheckin">0</p>
+                <p class="text-xs text-gray-500">Total Check-in</p>
+            </div>
+            <div class="bg-white rounded-xl shadow p-4 text-center">
+                <p class="text-2xl font-bold text-green-600" id="totalBerhasil">0</p>
+                <p class="text-xs text-gray-500">Hari Berhasil (≥70%)</p>
+            </div>
+            <div class="bg-white rounded-xl shadow p-4 text-center">
+                <p class="text-2xl font-bold text-red-600" id="totalGagal">0</p>
+                <p class="text-xs text-gray-500">Hari Kurang Berhasil</p>
+            </div>
+            <div class="bg-white rounded-xl shadow p-4 text-center">
+                <p class="text-2xl font-bold text-amber-600" id="rerataRisk">-</p>
+                <p class="text-xs text-gray-500">Rata-rata Risk Score</p>
+            </div>
+        </section>
+
+        <!-- Tabel Riwayat -->
+        <section class="bg-white rounded-2xl shadow overflow-hidden">
+            <div class="p-4 border-b border-gray-100">
+                <h3 class="font-semibold text-gray-800">📊 Detail Harian</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left text-gray-500">Tanggal</th>
+                            <th class="px-4 py-3 text-left text-gray-500">Status</th>
+                            <th class="px-4 py-3 text-left text-gray-500">Psikis (S/M/E/F)</th>
+                            <th class="px-4 py-3 text-left text-gray-500">Poin</th>
+                            <th class="px-4 py-3 text-left text-gray-500">Risk</th>
+                            <th class="px-4 py-3 text-left text-gray-500">Estimasi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Diisi JS -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="p-8 text-center text-gray-400">
+                <i class="fa-solid fa-inbox text-4xl mb-3"></i>
+                <p>Belum ada data check-in.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const STORAGE_KEY_RIWAYAT = 'riwayatCheckIn';
+
+        function getRiwayat() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY_RIWAYAT)) || [];
+        }
+
+        function renderRiwayat() {
+            const riwayat = getRiwayat();
+            const tbody = document.getElementById('tableBody');
+            const emptyState = document.getElementById('emptyState');
+
+            // Update statistik
+            document.getElementById('totalCheckin').textContent = riwayat.length;
+            document.getElementById('totalBerhasil').textContent = riwayat.filter(r => r.apakah_berhasil).length;
+            document.getElementById('totalGagal').textContent = riwayat.filter(r => !r.apakah_berhasil).length;
+            
+            if (riwayat.length > 0) {
+                const avgRisk = riwayat.reduce((sum, r) => sum + r.risk_score_rule, 0) / riwayat.length;
+                document.getElementById('rerataRisk').textContent = avgRisk.toFixed(1);
+            }
+
+            if (riwayat.length === 0) {
+                emptyState.style.display = 'block';
+                tbody.innerHTML = '';
+                return;
+            }
+            emptyState.style.display = 'none';
+
+            // Urutkan dari terbaru
+            riwayat.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+            tbody.innerHTML = riwayat.map(r => {
+                const statusBadge = r.status_checkin === 'done' 
+                    ? '<span class="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-semibold">Done</span>'
+                    : r.status_checkin === 'partial'
+                    ? '<span class="bg-amber-100 text-amber-700 px-2 py-1 rounded-full text-xs font-semibold">Partial</span>'
+                    : '<span class="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-semibold">Skipped</span>';
+
+                const riskColor = r.risk_score_rule < 30 ? 'text-green-600' : r.risk_score_rule < 60 ? 'text-amber-600' : 'text-red-600';
+
+                return `<tr class="border-b border-gray-50 hover:bg-gray-50">
+                    <td class="px-4 py-3 text-gray-700">${r.tanggal}</td>
+                    <td class="px-4 py-3">${statusBadge}</td>
+                    <td class="px-4 py-3 text-gray-600">${r.stres_level}/${r.mood_level}/${r.energi_level}/${r.fokus_level}</td>
+                    <td class="px-4 py-3 font-semibold ${r.poin_harian >= 0 ? 'text-green-600' : 'text-red-600'}">${r.poin_harian > 0 ? '+' : ''}${r.poin_harian}</td>
+                    <td class="px-4 py-3 font-bold ${riskColor}">${r.risk_score_rule}</td>
+                    <td class="px-4 py-3 text-gray-600">${r.estimasi_tanggal}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function exportCSV() {
+            const riwayat = getRiwayat();
+            if (riwayat.length === 0) {
+                alert('Belum ada data untuk diekspor.');
+                return;
+            }
+
+            // Tentukan kolom
+            const kolom = [
+                'tanggal','hari_ke','hari_dalam_minggu','jam_checkin',
+                'jumlah_intention','intention_text','jam_direncanakan','jam_aktual',
+                'status_checkin','persentase_penyelesaian',
+                'stres_level','mood_level','energi_level','fokus_level',
+                'jumlah_kebiasaan_baik','poin_kebiasaan_baik',
+                'jumlah_kebiasaan_buruk','poin_kebiasaan_buruk','detail_kebiasaan_buruk',
+                'ada_gangguan','jenis_gangguan',
+                'progress_goal','risk_score_rule','estimasi_mundur_hari',
+                'poin_harian','poin_total','refleksi','estimasi_tanggal','apakah_berhasil'
+            ];
+
+            // Buat baris CSV
+            let csv = kolom.join(',') + '\n';
+            riwayat.forEach(r => {
+                const row = kolom.map(k => {
+                    let val = r[k] !== undefined ? r[k] : '';
+                    // Tangani koma dan kutip
+                    if (typeof val === 'string' && (val.includes(',') || val.includes('"') || val.includes('\n'))) {
+                        val = '"' + val.replace(/"/g, '""') + '"';
+                    }
+                    return val;
+                }).join(',');
+                csv += row + '\n';
+            });
+
+            // Buat blob dan unduh
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'data_checkin_' + new Date().toISOString().split('T')[0] + '.csv';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        // Inisialisasi
+        renderRiwayat();
+    </script>
+</body>
+</html>
